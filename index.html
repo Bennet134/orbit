@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orbit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    /* ─── VARIABLES ─────────────────────────────────────── */
+    :root {
+      --bg:           #F8F5F0;
+      --bg2:          #EDE8DE;
+      --bg3:          #E0D9CE;
+      --card:         #FFFFFF;
+      --border:       rgba(150, 138, 120, 0.18);
+      --border2:      rgba(150, 138, 120, 0.32);
+
+      --text:         #1B1710;
+      --text2:        #6A6056;
+      --text3:        #A89E92;
+
+      --accent:       #6C5FE6;
+      --accent2:      #9B90F0;
+      --accent-glow:  rgba(108, 95, 230, 0.24);
+      --accent-bg:    rgba(108, 95, 230, 0.07);
+
+      --gold:         #C8A84B;
+      --gold-glow:    rgba(200, 168, 75, 0.28);
+      --gold-bg:      rgba(200, 168, 75, 0.09);
+
+      --green:        #55B98A;
+      --green-bg:     rgba(85, 185, 138, 0.10);
+      --amber:        #E09540;
+      --amber-bg:     rgba(224, 149, 64, 0.10);
+      --red:          #D96A6A;
+      --red-bg:       rgba(217, 106, 106, 0.10);
+
+      --radius:       18px;
+      --radius-sm:    10px;
+
+      --shadow:       0 1px 12px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.04);
+      --shadow-md:    0 4px 28px rgba(0,0,0,0.09), 0 2px 8px rgba(0,0,0,0.05);
+      --shadow-lg:    0 12px 56px rgba(0,0,0,0.13), 0 4px 16px rgba(0,0,0,0.07);
+
+      --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out:     cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ─── BASE ───────────────────────────────────────────── */
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    /* ─── BACKGROUND ─────────────────────────────────────── */
+    #bgCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 55% at 15% 8%,  rgba(108, 95, 230, 0.05) 0%, transparent 65%),
+        radial-gradient(ellipse 55% 70% at 85% 85%, rgba(200, 168, 75,  0.04) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── LAYOUT ─────────────────────────────────────────── */
+    .app {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── HEADER ─────────────────────────────────────────── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(248, 245, 240, 0.82);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      user-select: none;
+    }
+    .logo-icon {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-planet {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--gold) 100%);
+      box-shadow: 0 0 12px var(--accent-glow), 0 0 4px var(--gold-glow);
+      position: relative;
+      z-index: 2;
+      animation: planetPulse 4s ease-in-out infinite;
+    }
+    @keyframes planetPulse {
+      0%, 100% { box-shadow: 0 0 10px var(--accent-glow), 0 0 4px var(--gold-glow); }
+      50%       { box-shadow: 0 0 20px var(--accent-glow), 0 0 8px var(--gold-glow); }
+    }
+    .logo-ring {
+      position: absolute;
+      width: 30px;
+      height: 13px;
+      border: 1.8px solid var(--accent);
+      border-radius: 50%;
+      opacity: 0.55;
+      animation: orbitSpin 9s linear infinite;
+    }
+    @keyframes orbitSpin {
+      from { transform: rotateX(72deg) rotateZ(0deg); }
+      to   { transform: rotateX(72deg) rotateZ(360deg); }
+    }
+    .logo-text {
+      font-size: 1.12rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      background: linear-gradient(135deg, var(--text) 0%, var(--accent) 120%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav {
+      display: flex;
+      gap: 3px;
+      background: var(--bg2);
+      padding: 4px;
+      border-radius: 12px;
+    }
+    .nav-btn {
+      padding: 6px 18px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.18s var(--ease-out);
+      font-family: inherit;
+    }
+    .nav-btn:hover { color: var(--text); }
+    .nav-btn.active {
+      background: var(--card);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    /* ─── MAIN ───────────────────────────────────────────── */
+    .main {
+      flex: 1;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 32px 20px 100px;
+    }
+
+    /* ─── VIEWS ──────────────────────────────────────────── */
+    .view { display: none; }
+    .view.active {
+      display: block;
+      animation: viewIn 0.38s var(--ease-out) both;
+    }
+    @keyframes viewIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── CHECK-IN HEADER ────────────────────────────────── */
+    .checkin-header { margin-bottom: 28px; }
+    .today-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--green-bg);
+      color: var(--green);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      letter-spacing: 0.02em;
+    }
+    .checkin-date {
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--text3);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .checkin-title {
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .checkin-subtitle {
+      font-size: 0.8rem;
+      color: var(--text3);
+      margin-top: 5px;
+    }
+
+    /* ─── SECTIONS ───────────────────────────────────────── */
+    .section {
+      margin-bottom: 20px;
+      animation: sectionIn 0.5s var(--ease-out) both;
+    }
+    .section:nth-child(2) { animation-delay: 0.04s; }
+    .section:nth-child(3) { animation-delay: 0.08s; }
+    .section:nth-child(4) { animation-delay: 0.12s; }
+    .section:nth-child(5) { animation-delay: 0.16s; }
+    @keyframes sectionIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      padding-left: 4px;
+    }
+    .section-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+    .section-icon.mindset { background: var(--accent-bg); }
+    .section-icon.future  { background: var(--gold-bg); }
+    .section-icon.honesty { background: var(--green-bg); }
+    .section-icon.meta    { background: var(--bg3); }
+
+    .section-title {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--text3);
+    }
+
+    .section-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    /* ─── QUESTIONS ──────────────────────────────────────── */
+    .question {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s var(--ease-out);
+    }
+    .question:last-child { border-bottom: none; }
+    .question.answered {
+      background: linear-gradient(100deg, rgba(108,95,230,0.04) 0%, transparent 60%);
+    }
+    .q-label {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .q-answered-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .question.answered .q-answered-dot { opacity: 1; }
+
+    /* ─── CHOICE BUTTONS ─────────────────────────────────── */
+    .choices {
+      display: flex;
+      gap: 6px;
+    }
+    .choice-btn {
+      flex: 1;
+      padding: 9px 8px;
+      border: 1.5px solid var(--border2);
+      background: transparent;
+      border-radius: var(--radius-sm);
+      font-size: 0.74rem;
+      font-weight: 500;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.2s var(--ease-spring);
+      font-family: inherit;
+      text-align: center;
+      min-height: 38px;
+      line-height: 1.25;
+    }
+    .choice-btn:hover {
+      border-color: var(--accent2);
+      color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 14px var(--accent-glow);
+    }
+    .choice-btn.selected {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 18px var(--accent-glow);
+      transform: translateY(-1px) scale(1.03);
+    }
+    .choice-btn:active { transform: scale(0.96); }
+
+    /* ─── SLIDER ─────────────────────────────────────────── */
+    .slider-wrap { position: relative; padding: 14px 0 4px; }
+
+    .slider-tip {
+      position: absolute;
+      top: -2px;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.18s, left 0s;
+      z-index: 10;
+      box-shadow: 0 2px 10px var(--accent-glow);
+      white-space: nowrap;
+    }
+    .slider-tip.visible { opacity: 1; }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 5px;
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+      background: var(--bg2);
+      transition: background 0s;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2.5px solid var(--accent);
+      box-shadow: 0 2px 10px var(--accent-glow);
+      cursor: pointer;
+      transition: transform 0.2s var(--ease-spring), box-shadow 0.2s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+      box-shadow: 0 4px 18px var(--accent-glow);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2.5px solid var(--accent);
+      box-shadow: 0 2px 10px var(--accent-glow);
+      cursor: pointer;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 7px;
+    }
+    .slider-label {
+      font-size: 0.66rem;
+      color: var(--text3);
+    }
+
+    /* ─── SAVE BUTTON ────────────────────────────────────── */
+    .save-wrap { margin-top: 36px; text-align: center; }
+    .save-btn {
+      position: relative;
+      padding: 15px 52px;
+      background: linear-gradient(135deg, var(--accent) 0%, #8B7FEF 100%);
+      border: none;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: 0.015em;
+      box-shadow: 0 6px 28px var(--accent-glow), 0 1px 4px rgba(0,0,0,0.1);
+      transition: transform 0.25s var(--ease-spring), box-shadow 0.25s;
+      overflow: hidden;
+    }
+    .save-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .save-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 10px 36px var(--accent-glow), 0 2px 8px rgba(0,0,0,0.12);
+    }
+    .save-btn:hover::before { opacity: 1; }
+    .save-btn:active { transform: scale(0.97); }
+    .save-btn.launching {
+      animation: rocketLaunch 0.7s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+    }
+    @keyframes rocketLaunch {
+      0%   { transform: translateY(0) scale(1);    opacity: 1; }
+      20%  { transform: translateY(6px) scale(0.97); }
+      100% { transform: translateY(-90px) scale(0.6); opacity: 0; }
+    }
+    .save-hint {
+      margin-top: 12px;
+      font-size: 0.73rem;
+      color: var(--text3);
+    }
+
+    /* ─── SUCCESS OVERLAY ────────────────────────────────── */
+    .success-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      pointer-events: none;
+      opacity: 0;
+    }
+    .success-overlay.show {
+      animation: successFade 2.8s var(--ease-out) forwards;
+    }
+    @keyframes successFade {
+      0%   { opacity: 0; }
+      15%  { opacity: 1; }
+      72%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    .success-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 28px 44px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+      animation: successCard 2.8s var(--ease-spring) forwards;
+    }
+    @keyframes successCard {
+      0%   { transform: translateY(24px) scale(0.92); opacity: 0; }
+      20%  { transform: translateY(-6px) scale(1.02); opacity: 1; }
+      35%  { transform: translateY(0) scale(1); opacity: 1; }
+      75%  { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-24px); opacity: 0; }
+    }
+    .success-icon {
+      font-size: 2.4rem;
+      margin-bottom: 10px;
+      display: block;
+      animation: iconBounce 0.6s 0.15s var(--ease-spring) both;
+    }
+    @keyframes iconBounce {
+      from { transform: scale(0.4) rotate(-10deg); }
+      to   { transform: scale(1) rotate(0deg); }
+    }
+    .success-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+    .success-sub {
+      font-size: 0.78rem;
+      color: var(--text3);
+    }
+
+    /* ─── HISTORY VIEW ────────────────────────────────────── */
+    .history-header { margin-bottom: 22px; }
+    .history-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      margin-bottom: 3px;
+    }
+    .history-subtitle { font-size: 0.8rem; color: var(--text3); }
+
+    .history-empty {
+      text-align: center;
+      padding: 70px 20px;
+      color: var(--text3);
+    }
+    .history-empty-icon { font-size: 2.8rem; margin-bottom: 14px; opacity: 0.45; }
+    .history-empty-text { font-size: 0.85rem; line-height: 1.6; }
+
+    /* ─── HISTORY ACTIONS ────────────────────────────────── */
+    .history-actions {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s var(--ease-spring);
+      border: 1.5px solid var(--border2);
+      background: var(--card);
+      color: var(--text2);
+      box-shadow: var(--shadow);
+    }
+    .action-btn:hover {
+      border-color: var(--accent2);
+      color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+    .action-btn:active { transform: scale(0.97); }
+    .action-btn.import-btn { display: none; }
+
+    .entry-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .entry-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform 0.22s var(--ease-spring), box-shadow 0.22s, border-color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      animation: cardIn 0.4s var(--ease-out) both;
+    }
+    .entry-card:nth-child(1) { animation-delay: 0.03s; }
+    .entry-card:nth-child(2) { animation-delay: 0.06s; }
+    .entry-card:nth-child(3) { animation-delay: 0.09s; }
+    .entry-card:nth-child(n+4) { animation-delay: 0.12s; }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .entry-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(108,95,230,0.18);
+    }
+    .entry-card:active { transform: scale(0.99); }
+
+    .entry-date-col {
+      flex-shrink: 0;
+      text-align: center;
+      min-width: 42px;
+    }
+    .entry-day {
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+    .entry-month {
+      font-size: 0.62rem;
+      font-weight: 600;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 2px;
+    }
+    .entry-sep {
+      width: 1px;
+      height: 38px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+    .entry-info { flex: 1; min-width: 0; }
+    .entry-weekday {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text2);
+      margin-bottom: 7px;
+    }
+    .entry-dots { display: flex; gap: 4px; flex-wrap: wrap; }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-green  { background: var(--green); }
+    .dot-amber  { background: var(--amber); }
+    .dot-red    { background: var(--red); }
+    .dot-accent { background: var(--accent); }
+    .dot-gray   { background: var(--bg3); }
+
+    .entry-badge {
+      flex-shrink: 0;
+      padding: 4px 11px;
+      border-radius: 20px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .badge-good    { background: var(--green-bg); color: var(--green); }
+    .badge-neutral { background: var(--gold-bg);  color: var(--gold); }
+    .badge-bad     { background: var(--red-bg);   color: var(--red); }
+    .badge-empty   { background: var(--bg2);      color: var(--text3); }
+
+    .entry-arrow { color: var(--text3); font-size: 1rem; flex-shrink: 0; }
+
+    /* ─── DETAIL VIEW ─────────────────────────────────────── */
+    .detail-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--accent);
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: inherit;
+      padding: 0;
+      margin-bottom: 22px;
+      transition: gap 0.18s var(--ease-spring);
+    }
+    .detail-back:hover { gap: 9px; }
+    .detail-date-label {
+      font-size: 0.68rem;
+      font-weight: 500;
+      color: var(--text3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .detail-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      margin-bottom: 26px;
+    }
+    .detail-section { margin-bottom: 20px; }
+    .detail-section-label {
+      font-size: 0.67rem;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 9px;
+      padding-left: 3px;
+    }
+    .detail-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .detail-row {
+      display: flex;
+      align-items: center;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      gap: 14px;
+    }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-q {
+      flex: 1;
+      font-size: 0.82rem;
+      color: var(--text2);
+      min-width: 0;
+      line-height: 1.4;
+    }
+    .detail-a {
+      flex-shrink: 0;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-align: right;
+    }
+    .detail-a.good    { color: var(--green); }
+    .detail-a.neutral { color: var(--gold); }
+    .detail-a.bad     { color: var(--red); }
+    .detail-a.num {
+      color: var(--accent);
+      background: var(--accent-bg);
+      padding: 2px 11px;
+      border-radius: 20px;
+      font-size: 0.76rem;
+    }
+    .detail-a.skip {
+      color: var(--text3);
+      font-weight: 400;
+      font-style: italic;
+      font-size: 0.78rem;
+    }
+
+    /* ─── SCROLLBAR ───────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 3px; }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .main { padding: 24px 14px 80px; }
+      .header { padding: 0 16px; }
+      .choice-btn { font-size: 0.7rem; padding: 8px 5px; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="app">
+  <!-- ── HEADER ─────────────────────────────────────── -->
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon">
+        <div class="logo-planet"></div>
+        <div class="logo-ring"></div>
+      </div>
+      <span class="logo-text">Orbit</span>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn active" onclick="showView('checkin')">Check-in</button>
+      <button class="nav-btn"        onclick="showView('history')">Verlauf</button>
+    </nav>
+  </header>
+
+  <main class="main">
+
+    <!-- ── VIEW: CHECK-IN ─────────────────────────────── -->
+    <div class="view active" id="view-checkin">
+
+      <div class="checkin-header">
+        <div id="todayBadge"></div>
+        <div class="checkin-date" id="checkinDate"></div>
+        <div class="checkin-title">Wie war dein Tag?</div>
+        <div class="checkin-subtitle">Beantworte nur, was du möchtest. Kein Druck.</div>
+      </div>
+
+      <!-- SECTION 1 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-icon mindset">🧠</div>
+          <div class="section-title">Zustand &amp; Mindset</div>
+        </div>
+        <div class="section-card">
+          <div class="question" id="q-mood">
+            <div class="q-label"><span class="q-answered-dot"></span>Wie fühlst du dich gerade?</div>
+            <div class="choices">
+              <button class="choice-btn" data-q="mood" data-v="Schlecht"  onclick="pick(this)">Schlecht</button>
+              <button class="choice-btn" data-q="mood" data-v="Neutral"   onclick="pick(this)">Neutral</button>
+              <button class="choice-btn" data-q="mood" data-v="Gut"       onclick="pick(this)">Gut</button>
+            </div>
+          </div>
+          <div class="question" id="q-clarity">
+            <div class="q-label"><span class="q-answered-dot"></span>Wie klar ist dein Kopf?</div>
+            <div class="slider-wrap">
+              <div class="slider-tip" id="tip-clarity">5</div>
+              <input type="range" min="1" max="10" value="5" id="s-clarity" oninput="onSlider(this,'clarity')">
+              <div class="slider-labels">
+                <span class="slider-label">Unklar</span>
+                <span class="slider-label">Kristallklar</span>
+              </div>
+            </div>
+          </div>
+          <div class="question" id="q-energy">
+            <div class="q-label"><span class="q-answered-dot"></span>Wie hoch ist dein Energielevel?</div>
+            <div class="slider-wrap">
+              <div class="slider-tip" id="tip-energy">5</div>
+              <input type="range" min="1" max="10" value="5" id="s-energy" oninput="onSlider(this,'energy')">
+              <div class="slider-labels">
+                <span class="slider-label">Erschöpft</span>
+                <span class="slider-label">Voller Energie</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-icon future">🎯</div>
+          <div class="section-title">Zukunft &amp; Fokus</div>
+        </div>
+        <div class="section-card">
+          <div class="question" id="q-future">
+            <div class="q-label"><span class="q-answered-dot"></span>Bist du heute zukunftsorientiert?</div>
+            <div class="choices">
+              <button class="choice-btn" data-q="future" data-v="Nein"  onclick="pick(this)">Nein</button>
+              <button class="choice-btn" data-q="future" data-v="Mittel" onclick="pick(this)">Mittel</button>
+              <button class="choice-btn" data-q="future" data-v="Ja"    onclick="pick(this)">Ja</button>
+            </div>
+          </div>
+          <div class="question" id="q-goal">
+            <div class="q-label"><span class="q-answered-dot"></span>Arbeitest du an deinem Ziel oder flüchtest du?</div>
+            <div class="choices">
+              <button class="choice-btn" data-q="goal" data-v="Flucht"  onclick="pick(this)">Flucht</button>
+              <button class="choice-btn" data-q="goal" data-v="Neutral" onclick="pick(this)">Neutral</button>
+              <button class="choice-btn" data-q="goal" data-v="Ziel"    onclick="pick(this)">Ziel</button>
+            </div>
+          </div>
+          <div class="question" id="q-focus">
+            <div class="q-label"><span class="q-answered-dot"></span>Wie fokussiert warst du heute?</div>
+            <div class="slider-wrap">
+              <div class="slider-tip" id="tip-focus">5</div>
+              <input type="range" min="1" max="10" value="5" id="s-focus" oninput="onSlider(this,'focus')">
+              <div class="slider-labels">
+                <span class="slider-label">Abgelenkt</span>
+                <span class="slider-label">Hyperfokus</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-icon honesty">🔍</div>
+          <div class="section-title">Ehrlichkeit</div>
+        </div>
+        <div class="section-card">
+          <div class="question" id="q-satisfied">
+            <div class="q-label"><span class="q-answered-dot"></span>Wärst du zufrieden, wenn heute dein letzter Tag wäre?</div>
+            <div class="choices">
+              <button class="choice-btn" data-q="satisfied" data-v="Nein"  onclick="pick(this)">Nein</button>
+              <button class="choice-btn" data-q="satisfied" data-v="Mittel" onclick="pick(this)">Mittel</button>
+              <button class="choice-btn" data-q="satisfied" data-v="Ja"    onclick="pick(this)">Ja</button>
+            </div>
+          </div>
+          <div class="question" id="q-discipline">
+            <div class="q-label"><span class="q-answered-dot"></span>Warst du heute eher diszipliniert oder lost?</div>
+            <div class="choices">
+              <button class="choice-btn" data-q="discipline" data-v="Lost"          onclick="pick(this)">Lost</button>
+              <button class="choice-btn" data-q="discipline" data-v="Neutral"        onclick="pick(this)">Neutral</button>
+              <button class="choice-btn" data-q="discipline" data-v="Diszipliniert"  onclick="pick(this)">Diszipliniert</button>
+            </div>
+          </div>
+          <div class="question" id="q-progress">
+            <div class="q-label"><span class="q-answered-dot"></span>Hast du heute wirklich Fortschritt gemacht?</div>
+            <div class="choices">
+              <button class="choice-btn" data-q="progress" data-v="Nein"         onclick="pick(this)">Nein</button>
+              <button class="choice-btn" data-q="progress" data-v="Ein bisschen" onclick="pick(this)">Ein bisschen</button>
+              <button class="choice-btn" data-q="progress" data-v="Ja"           onclick="pick(this)">Ja</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-icon meta">✦</div>
+          <div class="section-title">Meta</div>
+        </div>
+        <div class="section-card">
+          <div class="question" id="q-goodday">
+            <div class="q-label"><span class="q-answered-dot"></span>War das ein guter Tag?</div>
+            <div class="choices">
+              <button class="choice-btn" data-q="goodday" data-v="Nein"  onclick="pick(this)">Nein</button>
+              <button class="choice-btn" data-q="goodday" data-v="Mittel" onclick="pick(this)">Mittel</button>
+              <button class="choice-btn" data-q="goodday" data-v="Ja"    onclick="pick(this)">Ja</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="save-wrap">
+        <button class="save-btn" id="saveBtn" onclick="saveEntry()">Eintrag speichern</button>
+        <div class="save-hint" id="saveHint">Du kannst den Eintrag jederzeit erneut ansehen</div>
+      </div>
+    </div><!-- /view-checkin -->
+
+    <!-- ── VIEW: HISTORY ──────────────────────────────── -->
+    <div class="view" id="view-history">
+      <div class="history-header">
+        <div class="history-title">Verlauf</div>
+        <div class="history-subtitle" id="historySub">Alle bisherigen Einträge</div>
+      </div>
+      <div class="history-actions">
+        <button class="action-btn" onclick="exportTxt()">↓ Exportieren</button>
+        <button class="action-btn" onclick="exportJson()">⬡ Backup (.json)</button>
+        <button class="action-btn" onclick="document.getElementById('importFile').click()">↑ Importieren</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJson(event)">
+      </div>
+      <div id="historyList"></div>
+    </div>
+
+    <!-- ── VIEW: DETAIL ───────────────────────────────── -->
+    <div class="view" id="view-detail">
+      <button class="detail-back" onclick="showView('history')">← Zurück</button>
+      <div id="detailContent"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Success overlay -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-card">
+    <span class="success-icon">🚀</span>
+    <div class="success-title">Eintrag gespeichert</div>
+    <div class="success-sub">Weiter so — du bist auf Kurs.</div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════ */
+const state = {
+  answers: {},
+  sliderTouched: new Set(),
+};
+
+/* ═══════════════════════════════════════════════════════
+   STORAGE
+═══════════════════════════════════════════════════════ */
+// Stable key — never change this, data lives here forever
+const KEY = 'orbit_entries';
+
+// Storage abstraction: localStorage → sessionStorage → in-memory fallback.
+// Ensures the app works in all contexts (local file, sandboxed iframe, private mode).
+const storage = (() => {
+  const probe = s => { s.setItem('__o', '1'); s.removeItem('__o'); return s; };
+  try { return probe(localStorage); }   catch {}
+  try { return probe(sessionStorage); } catch {}
+  // Pure in-memory fallback — survives the session but not a page reload
+  const mem = Object.create(null);
+  return {
+    getItem:    k => (k in mem ? mem[k] : null),
+    setItem:    (k, v) => { mem[k] = String(v); },
+    removeItem: k => { delete mem[k]; },
+  };
+})();
+
+function loadEntries() {
+  try {
+    // One-time migration from old versioned keys
+    for (const oldKey of ['orbit_entries_v2', 'orbit_entries_v1']) {
+      const raw = storage.getItem(oldKey);
+      if (!raw) continue;
+      try {
+        const old = JSON.parse(raw);
+        if (Array.isArray(old) && old.length > 0) {
+          const current = JSON.parse(storage.getItem(KEY) || '[]');
+          const map = new Map();
+          [...old, ...current].forEach(e => {
+            if (!map.has(e.date) || e.id > map.get(e.date).id) map.set(e.date, e);
+          });
+          const merged = Array.from(map.values()).sort((a, b) => b.date.localeCompare(a.date));
+          storage.setItem(KEY, JSON.stringify(merged));
+        }
+      } catch {}
+      storage.removeItem(oldKey);
+    }
+    return JSON.parse(storage.getItem(KEY) || '[]');
+  } catch { return []; }
+}
+
+function saveEntries(entries) {
+  storage.setItem(KEY, JSON.stringify(entries));
+}
+
+/* ═══════════════════════════════════════════════════════
+   VIEW MANAGEMENT
+═══════════════════════════════════════════════════════ */
+function showView(name) {
+  // Hide all views
+  document.querySelectorAll('.view').forEach(v => {
+    v.classList.remove('active');
+  });
+
+  // Activate target view (with animation reset)
+  const target = document.getElementById('view-' + name);
+  target.style.animation = 'none';
+  target.offsetHeight; // force reflow
+  target.style.animation = '';
+  target.classList.add('active');
+
+  // Update nav
+  const navBtns = document.querySelectorAll('.nav-btn');
+  navBtns.forEach(b => b.classList.remove('active'));
+  if (name === 'checkin') navBtns[0].classList.add('active');
+  if (name === 'history' || name === 'detail') navBtns[1].classList.add('active');
+
+  if (name === 'history') renderHistory();
+}
+
+/* ═══════════════════════════════════════════════════════
+   CHECK-IN INTERACTIONS
+═══════════════════════════════════════════════════════ */
+function pick(btn) {
+  const q = btn.dataset.q;
+  const v = btn.dataset.v;
+
+  // Deselect siblings
+  btn.closest('.choices').querySelectorAll('.choice-btn')
+    .forEach(b => b.classList.remove('selected'));
+
+  // Toggle off if same value
+  if (state.answers[q] === v) {
+    delete state.answers[q];
+  } else {
+    state.answers[q] = v;
+    btn.classList.add('selected');
+  }
+
+  // Mark / unmark question as answered
+  document.getElementById('q-' + q)
+    .classList.toggle('answered', q in state.answers);
+}
+
+function onSlider(slider, key) {
+  const val = parseInt(slider.value);
+  const pct = (val - 1) / 9 * 100; // range 1–10
+
+  // Fill track
+  slider.style.background =
+    `linear-gradient(to right, var(--accent) ${pct}%, var(--bg2) ${pct}%)`;
+
+  // Position & show tooltip
+  const tip = document.getElementById('tip-' + key);
+  if (tip) {
+    tip.textContent = val;
+    tip.classList.add('visible');
+    const thumbW   = 20;
+    const trackW   = slider.offsetWidth - thumbW;
+    const rawLeft  = thumbW / 2 + trackW * (pct / 100);
+    const halfTip  = tip.offsetWidth / 2 || 12;
+    tip.style.left = Math.max(halfTip, Math.min(slider.offsetWidth - halfTip, rawLeft)) + 'px';
+  }
+
+  // Save answer & mark answered
+  state.answers[key] = val;
+  state.sliderTouched.add(key);
+  document.getElementById('q-' + key)?.classList.add('answered');
+}
+
+/* ═══════════════════════════════════════════════════════
+   SAVE
+═══════════════════════════════════════════════════════ */
+async function saveEntry() {
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true;
+
+  // Rocket launch animation
+  btn.classList.add('launching');
+  await wait(600);
+
+  try {
+    // Build entry
+    const entry = {
+      id:      Date.now(),
+      date:    todayISO(),
+      answers: { ...state.answers },
+    };
+
+    // Persist (replace today's entry if exists)
+    const all = loadEntries().filter(e => e.date !== entry.date);
+    all.unshift(entry);
+    saveEntries(all);
+
+    // Show success
+    const overlay = document.getElementById('successOverlay');
+    overlay.style.animation = 'none';
+    overlay.offsetHeight;
+    overlay.style.animation = '';
+    overlay.classList.add('show');
+
+    await wait(2800);
+    overlay.classList.remove('show');
+
+    resetForm();
+    checkTodayEntry();
+  } catch (err) {
+    console.error('Orbit: saveEntry failed', err);
+    alert('Speichern fehlgeschlagen. Bitte versuche es erneut.');
+  } finally {
+    // Always re-enable the button regardless of success/failure
+    btn.classList.remove('launching');
+    btn.style.opacity   = '1';
+    btn.style.transform = '';
+    btn.disabled = false;
+  }
+}
+
+function resetForm() {
+  state.answers     = {};
+  state.sliderTouched = new Set();
+
+  document.querySelectorAll('.choice-btn.selected')
+    .forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.question.answered')
+    .forEach(q => q.classList.remove('answered'));
+
+  ['clarity', 'energy', 'focus'].forEach(key => {
+    const s = document.getElementById('s-' + key);
+    if (!s) return;
+    s.value = 5;
+    s.style.background = 'var(--bg2)';
+    const tip = document.getElementById('tip-' + key);
+    if (tip) tip.classList.remove('visible');
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   HISTORY
+═══════════════════════════════════════════════════════ */
+function renderHistory() {
+  const entries = loadEntries();
+  const sub  = document.getElementById('historySub');
+  const list = document.getElementById('historyList');
+
+  sub.textContent = entries.length === 1
+    ? '1 Eintrag'
+    : `${entries.length} Einträge`;
+
+  if (entries.length === 0) {
+    list.innerHTML = `
+      <div class="history-empty">
+        <div class="history-empty-icon">🌌</div>
+        <div class="history-empty-text">Noch keine Einträge.<br>Starte deinen ersten Check-in.</div>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = `<div class="entry-list">${entries.map(entryCard).join('')}</div>`;
+}
+
+function entryCard(entry) {
+  const d       = new Date(entry.date + 'T12:00:00');
+  const day     = d.getDate();
+  const month   = d.toLocaleDateString('de-DE', { month: 'short' });
+  const weekday = d.toLocaleDateString('de-DE', { weekday: 'long' });
+  const a       = entry.answers || {};
+  const dots    = buildDots(a);
+  const badge   = buildBadge(a.goodday);
+
+  return `
+    <div class="entry-card" onclick="showDetail(${entry.id})">
+      <div class="entry-date-col">
+        <div class="entry-day">${day}</div>
+        <div class="entry-month">${month}</div>
+      </div>
+      <div class="entry-sep"></div>
+      <div class="entry-info">
+        <div class="entry-weekday">${weekday}</div>
+        <div class="entry-dots">${dots}</div>
+      </div>
+      <div class="entry-badge ${badge.cls}">${badge.label}</div>
+      <div class="entry-arrow">›</div>
+    </div>`;
+}
+
+function buildDots(a) {
+  const keys = ['mood','clarity','energy','future','goal','focus','satisfied','discipline','progress','goodday'];
+  return keys.map(k => {
+    const v = a[k];
+    if (v == null) return `<div class="dot dot-gray"></div>`;
+    return `<div class="dot ${dotClass(k, v)}"></div>`;
+  }).join('');
+}
+
+function dotClass(key, value) {
+  if (typeof value === 'number') {
+    if (value >= 7) return 'dot-green';
+    if (value >= 4) return 'dot-accent';
+    return 'dot-amber';
+  }
+  const pos = ['Gut','Ja','Ziel','Diszipliniert'];
+  const neg = ['Schlecht','Nein','Flucht','Lost'];
+  if (pos.includes(value)) return 'dot-green';
+  if (neg.includes(value)) return 'dot-red';
+  return 'dot-amber';
+}
+
+function buildBadge(goodday) {
+  if (!goodday)              return { cls: 'badge-empty',   label: '—' };
+  if (goodday === 'Ja')      return { cls: 'badge-good',    label: 'Guter Tag' };
+  if (goodday === 'Nein')    return { cls: 'badge-bad',     label: 'Schwer' };
+  return                            { cls: 'badge-neutral', label: 'Okay' };
+}
+
+/* ═══════════════════════════════════════════════════════
+   DETAIL
+═══════════════════════════════════════════════════════ */
+function showDetail(id) {
+  const entry = loadEntries().find(e => e.id === id);
+  if (!entry) return;
+
+  const d       = new Date(entry.date + 'T12:00:00');
+  const dateStr = d.toLocaleDateString('de-DE', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+  const a = entry.answers || {};
+
+  const sections = [
+    {
+      label: '🧠 Zustand & Mindset',
+      rows: [
+        { q: 'Wie fühlst du dich gerade?',         v: a.mood,       type: 'choice' },
+        { q: 'Wie klar ist dein Kopf?',              v: a.clarity,    type: 'slider' },
+        { q: 'Wie hoch ist dein Energielevel?',      v: a.energy,     type: 'slider' },
+      ],
+    },
+    {
+      label: '🎯 Zukunft & Fokus',
+      rows: [
+        { q: 'Bist du heute zukunftsorientiert?',                v: a.future,     type: 'choice' },
+        { q: 'Arbeitest du an deinem Ziel oder flüchtest du?',   v: a.goal,       type: 'choice' },
+        { q: 'Wie fokussiert warst du heute?',                   v: a.focus,      type: 'slider' },
+      ],
+    },
+    {
+      label: '🔍 Ehrlichkeit',
+      rows: [
+        { q: 'Wärst du zufrieden, wenn heute dein letzter Tag wäre?', v: a.satisfied,  type: 'choice' },
+        { q: 'Warst du eher diszipliniert oder lost?',                 v: a.discipline, type: 'choice' },
+        { q: 'Hast du heute wirklich Fortschritt gemacht?',            v: a.progress,   type: 'choice' },
+      ],
+    },
+    {
+      label: '✦ Meta',
+      rows: [
+        { q: 'War das ein guter Tag?', v: a.goodday, type: 'choice' },
+      ],
+    },
+  ];
+
+  // Build HTML with string concatenation — avoids nested-template-literal parsing edge cases
+  let html = '';
+  html += '<div class="detail-date-label">' + dateStr.toUpperCase() + '</div>';
+  html += '<div class="detail-title">Tages-R\u00FCckblick</div>';
+
+  for (const sec of sections) {
+    html += '<div class="detail-section">';
+    html += '<div class="detail-section-label">' + sec.label + '</div>';
+    html += '<div class="detail-card">';
+    for (const row of sec.rows) {
+      html += '<div class="detail-row">';
+      html += '<div class="detail-q">' + row.q + '</div>';
+      if (row.v == null) {
+        html += '<span class="detail-a skip">\u00DCbersprungen</span>';
+      } else if (row.type === 'slider') {
+        html += '<span class="detail-a num">' + row.v + '\u202F/\u202F10</span>';
+      } else {
+        html += '<span class="detail-a ' + ansClass(row.v) + '">' + row.v + '</span>';
+      }
+      html += '</div>';
+    }
+    html += '</div></div>';
+  }
+
+  document.getElementById('detailContent').innerHTML = html;
+  showView('detail');
+}
+
+function ansClass(value) {
+  const pos = ['Gut','Ja','Ziel','Diszipliniert'];
+  const neg = ['Schlecht','Nein','Flucht','Lost'];
+  if (pos.includes(value)) return 'good';
+  if (neg.includes(value)) return 'bad';
+  return 'neutral';
+}
+
+/* ═══════════════════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════════════════ */
+function todayISO() {
+  const d = new Date();
+  return [
+    d.getFullYear(),
+    String(d.getMonth() + 1).padStart(2, '0'),
+    String(d.getDate()).padStart(2, '0'),
+  ].join('-');
+}
+
+function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function checkTodayEntry() {
+  const today   = todayISO();
+  const exists  = loadEntries().some(e => e.date === today);
+  const badge   = document.getElementById('todayBadge');
+  const saveBtn = document.getElementById('saveBtn');
+  const hint    = document.getElementById('saveHint');
+
+  if (exists) {
+    badge.innerHTML = `<div class="today-badge">✓ Heute bereits eingecheckt</div>`;
+    saveBtn.textContent = 'Eintrag aktualisieren';
+    hint.textContent    = 'Dieser Eintrag ersetzt den heutigen Eintrag';
+  } else {
+    badge.innerHTML     = '';
+    saveBtn.textContent = 'Eintrag speichern';
+    hint.textContent    = 'Du kannst den Eintrag jederzeit erneut ansehen';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   EXPORT / IMPORT
+═══════════════════════════════════════════════════════ */
+const FIELD_LABELS = {
+  mood:        'Stimmung',
+  clarity:     'Kopfklarheit',
+  energy:      'Energielevel',
+  future:      'Zukunftsorientiert',
+  goal:        'Ziel oder Flucht',
+  focus:       'Fokus',
+  satisfied:   'Zufriedenheit (letzter Tag)',
+  discipline:  'Disziplin',
+  progress:    'Fortschritt',
+  goodday:     'Guter Tag',
+};
+
+function exportTxt() {
+  const entries = loadEntries();
+  if (entries.length === 0) { alert('Keine Einträge zum Exportieren.'); return; }
+
+  const now = new Date().toLocaleDateString('de-DE', {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
+
+  let out = 'ORBIT — Tages-Check-ins\n';
+  out += 'Exportiert am: ' + now + '\n';
+  out += '='.repeat(44) + '\n\n';
+
+  for (const entry of entries) {
+    const d = new Date(entry.date + 'T12:00:00');
+    const dateStr = d.toLocaleDateString('de-DE', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+    out += dateStr + '\n';
+    out += '-'.repeat(44) + '\n';
+
+    const a = entry.answers || {};
+    let hasAny = false;
+    for (const [key, label] of Object.entries(FIELD_LABELS)) {
+      const v = a[key];
+      if (v != null) {
+        const display = typeof v === 'number' ? v + '/10' : v;
+        out += '  ' + label.padEnd(30) + display + '\n';
+        hasAny = true;
+      }
+    }
+    if (!hasAny) out += '  (Keine Antworten gespeichert)\n';
+    out += '\n';
+  }
+
+  out += '='.repeat(44) + '\n';
+  out += entries.length + ' Eintr\u00E4ge gesamt\n';
+
+  downloadBlob(out, 'text/plain;charset=utf-8', 'orbit-export-' + todayISO() + '.txt');
+}
+
+function exportJson() {
+  const entries = loadEntries();
+  if (entries.length === 0) { alert('Keine Einträge zum Exportieren.'); return; }
+  const payload = JSON.stringify({ app: 'orbit', version: 1, entries }, null, 2);
+  downloadBlob(payload, 'application/json;charset=utf-8', 'orbit-backup-' + todayISO() + '.json');
+}
+
+function importJson(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      // Accept raw array or wrapped {app, entries}
+      const incoming = Array.isArray(data) ? data : (data.entries || []);
+      if (!incoming.length) { alert('Keine Einträge in der Datei gefunden.'); return; }
+
+      const current = loadEntries();
+      // Merge: keep most recent per date
+      const map = new Map();
+      [...current, ...incoming].forEach(en => {
+        if (!map.has(en.date) || en.id > map.get(en.date).id) map.set(en.date, en);
+      });
+      const merged = Array.from(map.values()).sort((a, b) => b.date.localeCompare(a.date));
+      saveEntries(merged);
+
+      alert(incoming.length + ' Einträge importiert. Gesamt: ' + merged.length + ' Einträge.');
+      renderHistory();
+    } catch {
+      alert('Fehler beim Lesen der Datei. Bitte eine gültige Orbit-Backup-Datei wählen.');
+    }
+    // Reset input so the same file can be re-selected
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function downloadBlob(content, mimeType, filename) {
+  const blob = new Blob([content], { type: mimeType });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ═══════════════════════════════════════════════════════
+   BACKGROUND CANVAS
+═══════════════════════════════════════════════════════ */
+function initCanvas() {
+  const canvas = document.getElementById('bgCanvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H, particles;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function mkParticles() {
+    const count = Math.floor(W * H / 12000);
+    particles = Array.from({ length: count }, () => ({
+      x:       Math.random() * W,
+      y:       Math.random() * H,
+      r:       Math.random() * 1.4 + 0.2,
+      opacity: Math.random() * 0.35 + 0.04,
+      speed:   Math.random() * 0.18 + 0.04,
+      drift:   (Math.random() - 0.5) * 0.06,
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    for (const p of particles) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(108, 95, 230, ${p.opacity})`;
+      ctx.fill();
+      p.y -= p.speed;
+      p.x += p.drift;
+      if (p.y < -4)  { p.y = H + 4; p.x = Math.random() * W; }
+      if (p.x < -4)  p.x = W + 4;
+      if (p.x > W + 4) p.x = -4;
+    }
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  mkParticles();
+  draw();
+  window.addEventListener('resize', () => { resize(); mkParticles(); });
+}
+
+/* ═══════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', () => {
+  // Set date label
+  const d = new Date();
+  document.getElementById('checkinDate').textContent =
+    d.toLocaleDateString('de-DE', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+  // Reset sliders to neutral look
+  ['clarity', 'energy', 'focus'].forEach(key => {
+    const s = document.getElementById('s-' + key);
+    if (s) s.style.background = 'var(--bg2)';
+  });
+
+  checkTodayEntry();
+  initCanvas();
+});
+</script>
+</body>
+</html>
