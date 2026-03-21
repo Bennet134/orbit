@@ -4,6 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Orbit</title>
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#6C5FE6" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Orbit" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
@@ -1534,7 +1540,80 @@ window.addEventListener('DOMContentLoaded', () => {
 
   checkTodayEntry();
   initCanvas();
+  generateAppleIcon();
 });
+
+// Generate a PNG apple-touch-icon at runtime (iOS Safari requires PNG, not SVG)
+function generateAppleIcon() {
+  const size = 180;
+  const c    = document.createElement('canvas');
+  c.width = c.height = size;
+  const ctx = c.getContext('2d');
+  const cx  = size / 2;
+
+  // Background
+  ctx.fillStyle = '#F8F5F0';
+  roundRect(ctx, 0, 0, size, size, size * 0.22);
+  ctx.fill();
+
+  // Subtle bg glow
+  const bgGlow = ctx.createRadialGradient(cx * 0.65, cx * 0.55, 0, cx * 0.65, cx * 0.55, cx);
+  bgGlow.addColorStop(0, 'rgba(108,95,230,0.10)');
+  bgGlow.addColorStop(1, 'rgba(108,95,230,0)');
+  ctx.fillStyle = bgGlow;
+  roundRect(ctx, 0, 0, size, size, size * 0.22);
+  ctx.fill();
+
+  // Orbit ring (simulated perspective with scaled ellipse)
+  ctx.save();
+  ctx.translate(cx, cx);
+  ctx.rotate(-0.21);
+  ctx.scale(1, 0.36);
+  ctx.beginPath();
+  ctx.ellipse(0, 0, cx * 0.84, cx * 0.84, 0, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(108,95,230,0.58)';
+  ctx.lineWidth = 6.5;
+  ctx.stroke();
+  ctx.restore();
+
+  // Planet glow
+  const glow = ctx.createRadialGradient(cx, cx, 0, cx, cx, cx * 0.6);
+  glow.addColorStop(0, 'rgba(108,95,230,0.32)');
+  glow.addColorStop(1, 'rgba(108,95,230,0)');
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.arc(cx, cx, cx * 0.6, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Planet
+  const planet = ctx.createRadialGradient(cx * 0.78, cx * 0.74, 0, cx, cx, cx * 0.38);
+  planet.addColorStop(0,   '#B0A6F8');
+  planet.addColorStop(0.6, '#7C6FCD');
+  planet.addColorStop(1,   '#C8A84B');
+  ctx.fillStyle = planet;
+  ctx.beginPath();
+  ctx.arc(cx, cx, cx * 0.38, 0, Math.PI * 2);
+  ctx.fill();
+
+  const link = document.createElement('link');
+  link.rel  = 'apple-touch-icon';
+  link.href = c.toDataURL('image/png');
+  document.head.appendChild(link);
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
 </script>
 </body>
 </html>

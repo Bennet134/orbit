@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bgGlow" cx="30%" cy="25%" r="60%">
+      <stop offset="0%" stop-color="#6C5FE6" stop-opacity="0.09"/>
+      <stop offset="100%" stop-color="#F8F5F0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="planetGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#6C5FE6" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#6C5FE6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="planetFill" cx="35%" cy="32%" r="65%">
+      <stop offset="0%" stop-color="#A89DF5"/>
+      <stop offset="55%" stop-color="#7C6FCD"/>
+      <stop offset="100%" stop-color="#C8A84B"/>
+    </radialGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="10" flood-color="#6C5FE6" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <!-- Background rounded square -->
+  <rect width="512" height="512" rx="112" fill="#F8F5F0"/>
+  <rect width="512" height="512" rx="112" fill="url(#bgGlow)"/>
+
+  <!-- Orbit ring back half (behind planet) -->
+  <ellipse cx="256" cy="256" rx="195" ry="68"
+    fill="none" stroke="#6C5FE6" stroke-width="11" stroke-opacity="0.45"
+    stroke-dasharray="340 275" stroke-dashoffset="0"
+    transform="rotate(-12, 256, 256)"/>
+
+  <!-- Planet glow -->
+  <circle cx="256" cy="256" r="110" fill="url(#planetGlow)"/>
+
+  <!-- Planet -->
+  <circle cx="256" cy="256" r="78" fill="url(#planetFill)" filter="url(#softShadow)"/>
+
+  <!-- Orbit ring front half (in front of planet) -->
+  <ellipse cx="256" cy="256" rx="195" ry="68"
+    fill="none" stroke="#6C5FE6" stroke-width="11" stroke-opacity="0.65"
+    stroke-dasharray="275 340" stroke-dashoffset="340"
+    transform="rotate(-12, 256, 256)"/>
+</svg>
