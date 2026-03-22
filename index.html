@@ -557,8 +557,9 @@
     /* ─── HISTORY ACTIONS ────────────────────────────────── */
     .history-actions {
       display: flex;
+      flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 22px;
+      margin-top: 24px;
     }
     .action-btn {
       display: inline-flex;
@@ -1028,11 +1029,12 @@
     .modal-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 5px; }
     .modal-sub   { font-size: 0.79rem; color: var(--text3); margin-bottom: 22px; }
     .time-input {
-      width: 100%; padding: 13px 16px; margin-bottom: 16px;
+      display: block; width: 100%; box-sizing: border-box;
+      padding: 13px 16px; margin-bottom: 16px;
       border: 1.5px solid var(--border2); border-radius: var(--radius-sm);
       font-family: inherit; font-size: 1.1rem; font-weight: 600;
       color: var(--text); background: var(--bg); outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s; min-width: 0;
     }
     .time-input:focus { border-color: var(--accent); }
     .modal-save-btn {
@@ -1263,15 +1265,15 @@
         <div class="history-title">Verlauf</div>
         <div class="history-subtitle" id="historySub">Alle bisherigen Einträge</div>
       </div>
+      <div id="heatmapContainer" class="heatmap-section"></div>
+      <div id="historyList"></div>
       <div class="history-actions">
         <button class="action-btn" onclick="exportTxt()">↑ Exportieren</button>
         <button class="action-btn" onclick="exportJson()">↑ Backup (.json)</button>
         <button class="action-btn" onclick="document.getElementById('importFile').click()">↓ Importieren</button>
-        <button class="action-btn" id="reminderBtn" onclick="openReminderModal()" style="margin-left:auto">🔔</button>
+        <button class="action-btn" id="reminderBtn" onclick="openReminderModal()">🔔 Erinnerung</button>
         <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJson(event)">
       </div>
-      <div id="heatmapContainer" class="heatmap-section"></div>
-      <div id="historyList"></div>
     </div>
 
     <!-- ── VIEW: DETAIL ───────────────────────────────── -->
