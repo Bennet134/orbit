@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -909,13 +909,163 @@
 
     /* ─── DETAIL NOTES ────────────────────────────────────── */
     .detail-notes-text {
-      padding: 14px 18px;
-      font-size: 0.82rem;
-      color: var(--text2);
-      line-height: 1.65;
-      white-space: pre-wrap;
-      word-break: break-word;
+      padding: 14px 18px; font-size: 0.82rem;
+      color: var(--text2); line-height: 1.65;
+      white-space: pre-wrap; word-break: break-word;
     }
+
+    /* ─── DARK MODE ──────────────────────────────────────── */
+    [data-theme="dark"] {
+      --bg:          #1C1912;
+      --bg2:         #262219;
+      --bg3:         #312D21;
+      --card:        #221E14;
+      --border:      rgba(220,200,160,0.09);
+      --border2:     rgba(220,200,160,0.17);
+      --text:        #EDE8DC;
+      --text2:       #A89E8C;
+      --text3:       #6E6455;
+    }
+
+    /* ─── HEADER ICON BUTTONS ─────────────────────────────── */
+    .header-actions { display: flex; align-items: center; gap: 7px; }
+    .icon-btn {
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 1.5px solid var(--border2); background: var(--card);
+      color: var(--text2); font-size: 0.95rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s var(--ease-spring); box-shadow: var(--shadow);
+      flex-shrink: 0;
+    }
+    .icon-btn:hover { border-color: var(--accent2); color: var(--accent); transform: scale(1.1); }
+    .icon-btn.active { background: var(--accent-bg); border-color: var(--accent2); color: var(--accent); }
+
+    /* ─── QUOTE CARD ──────────────────────────────────────── */
+    .quote-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 15px 17px;
+      margin-bottom: 20px; box-shadow: var(--shadow);
+      display: flex; gap: 12px; align-items: flex-start;
+      animation: sectionIn 0.4s var(--ease-out) both;
+    }
+    .quote-bar {
+      width: 3px; align-self: stretch; flex-shrink: 0;
+      background: linear-gradient(to bottom, var(--accent), var(--gold));
+      border-radius: 2px;
+    }
+    .quote-text { font-size: 0.82rem; font-style: italic; color: var(--text2); line-height: 1.6; }
+    .quote-author { font-size: 0.68rem; font-weight: 600; color: var(--text3); margin-top: 5px; }
+
+    /* ─── STREAK ──────────────────────────────────────────── */
+    .streak-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: linear-gradient(135deg, rgba(200,168,75,.13), rgba(200,168,75,.06));
+      border: 1px solid rgba(200,168,75,.28); color: var(--gold);
+      font-size: 0.7rem; font-weight: 700; padding: 3px 9px;
+      border-radius: 20px; margin-left: 7px;
+    }
+
+    /* ─── HEATMAP ─────────────────────────────────────────── */
+    .heatmap-section { margin-bottom: 24px; }
+    .heatmap-label {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.09em;
+      text-transform: uppercase; color: var(--text3); margin-bottom: 10px; padding-left: 4px;
+    }
+    .heatmap-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow);
+    }
+    .heatmap-grid { display: flex; gap: 3px; overflow-x: auto; }
+    .heatmap-col  { display: flex; flex-direction: column; gap: 3px; }
+    .hm-cell {
+      width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0;
+      transition: transform 0.15s var(--ease-spring); cursor: default;
+    }
+    .hm-cell:hover { transform: scale(1.45); }
+    .hm-empty  { background: var(--bg2); }
+    .hm-low    { background: rgba(217,106,106,0.4); }
+    .hm-mid    { background: rgba(200,168,75,0.5); }
+    .hm-good   { background: rgba(108,95,230,0.5); }
+    .hm-great  { background: rgba(85,185,138,0.8); }
+    .hm-today  { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: 3px; }
+    .heatmap-legend {
+      display: flex; gap: 6px; align-items: center;
+      margin-top: 10px; font-size: 0.63rem; color: var(--text3);
+    }
+    .heatmap-legend-cells { display: flex; gap: 3px; }
+
+    /* ─── TREND CHART ─────────────────────────────────────── */
+    .trend-section { margin-bottom: 24px; }
+    .trend-label {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.09em;
+      text-transform: uppercase; color: var(--text3); margin-bottom: 10px; padding-left: 4px;
+    }
+    .trend-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow);
+    }
+    .trend-svg { width: 100%; height: 90px; display: block; overflow: visible; }
+
+    /* ─── REMINDER MODAL ──────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,0.32); backdrop-filter: blur(6px);
+      display: flex; align-items: flex-end; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.22s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-sheet {
+      width: 100%; max-width: 600px;
+      background: var(--card); border-radius: 24px 24px 0 0;
+      padding: 28px 22px 44px; border: 1px solid var(--border); border-bottom: none;
+      box-shadow: var(--shadow-lg); position: relative;
+      transform: translateY(100%); transition: transform 0.32s var(--ease-spring);
+    }
+    .modal-overlay.open .modal-sheet { transform: translateY(0); }
+    .modal-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 5px; }
+    .modal-sub   { font-size: 0.79rem; color: var(--text3); margin-bottom: 22px; }
+    .time-input {
+      width: 100%; padding: 13px 16px; margin-bottom: 16px;
+      border: 1.5px solid var(--border2); border-radius: var(--radius-sm);
+      font-family: inherit; font-size: 1.1rem; font-weight: 600;
+      color: var(--text); background: var(--bg); outline: none;
+      transition: border-color 0.2s;
+    }
+    .time-input:focus { border-color: var(--accent); }
+    .modal-save-btn {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, var(--accent), #8B7FEF);
+      border: none; border-radius: 50px;
+      font-size: 0.9rem; font-weight: 600; color: #fff;
+      font-family: inherit; cursor: pointer;
+      box-shadow: 0 4px 18px var(--accent-glow);
+      transition: transform 0.2s var(--ease-spring);
+    }
+    .modal-save-btn:hover { transform: translateY(-1px); }
+    .modal-close {
+      position: absolute; top: 18px; right: 18px;
+      width: 28px; height: 28px; border-radius: 50%; border: none;
+      background: var(--bg2); color: var(--text3); font-size: 1rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .reminder-off-btn {
+      width: 100%; padding: 10px; margin-top: 10px;
+      background: none; border: 1.5px solid var(--border2);
+      border-radius: 50px; font-family: inherit; font-size: 0.82rem;
+      color: var(--text3); cursor: pointer; transition: border-color 0.2s;
+    }
+    .reminder-off-btn:hover { border-color: var(--red); color: var(--red); }
+
+    /* ─── EDIT ENTRY BUTTON ───────────────────────────────── */
+    .detail-edit-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 20px; border-radius: 50px; border: 1.5px solid var(--border2);
+      background: var(--card); color: var(--text2); font-family: inherit;
+      font-size: 0.8rem; font-weight: 600; cursor: pointer;
+      box-shadow: var(--shadow); margin-top: 22px;
+      transition: all 0.2s var(--ease-spring);
+    }
+    .detail-edit-btn:hover { border-color: var(--accent2); color: var(--accent); transform: translateY(-1px); }
   </style>
 </head>
 <body>
@@ -932,6 +1082,10 @@
       </div>
       <span class="logo-text">Orbit</span>
     </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="reminderBtn" onclick="openReminderModal()" title="Erinnerung">🔔</button>
+      <button class="icon-btn" id="themeToggle"  onclick="toggleDarkMode()"   title="Dark Mode">🌙</button>
+    </div>
     <nav class="nav">
       <button class="nav-btn active" onclick="showView('checkin')">Check-in</button>
       <button class="nav-btn"        onclick="showView('history')">Verlauf</button>
@@ -944,9 +1098,14 @@
     <!-- ── VIEW: CHECK-IN ─────────────────────────────── -->
     <div class="view active" id="view-checkin">
 
+      <!-- Quote of the day -->
+      <div class="quote-card" id="quoteCard"></div>
+
       <div class="checkin-header">
         <div id="todayBadge"></div>
-        <div class="checkin-date" id="checkinDate"></div>
+        <div class="checkin-date" id="checkinDate">
+          <span id="checkinDateText"></span><span id="streakBadge"></span>
+        </div>
         <div class="checkin-title">Wie war dein Tag?</div>
         <div class="checkin-subtitle">Beantworte nur, was du möchtest. Kein Druck.</div>
       </div>
@@ -1111,6 +1270,7 @@
         <button class="action-btn" onclick="document.getElementById('importFile').click()">↓ Importieren</button>
         <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJson(event)">
       </div>
+      <div id="heatmapContainer" class="heatmap-section"></div>
       <div id="historyList"></div>
     </div>
 
@@ -1124,6 +1284,18 @@
     <div class="view" id="view-wochen"></div>
 
   </main>
+</div>
+
+<!-- Reminder modal -->
+<div class="modal-overlay" id="reminderModal" onclick="if(event.target===this)closeReminderModal()">
+  <div class="modal-sheet">
+    <button class="modal-close" onclick="closeReminderModal()">✕</button>
+    <div class="modal-title">🔔 Tägliche Erinnerung</div>
+    <div class="modal-sub">Orbit erinnert dich täglich an deinen Check-in.</div>
+    <input type="time" class="time-input" id="reminderTime" value="20:00" />
+    <button class="modal-save-btn" onclick="saveReminder()">Erinnerung aktivieren</button>
+    <button class="reminder-off-btn" onclick="disableReminder()">Erinnerung deaktivieren</button>
+  </div>
 </div>
 
 <!-- Success overlay -->
@@ -1142,6 +1314,7 @@
 const state = {
   answers: {},
   sliderTouched: new Set(),
+  editingDate: null,   // set when editing a past entry
 };
 
 /* ═══════════════════════════════════════════════════════
@@ -1238,7 +1411,7 @@ function showView(name) {
   if (name === 'history' || name === 'detail') navBtns[1].classList.add('active');
   if (name === 'wochen')  navBtns[2].classList.add('active');
 
-  if (name === 'history') renderHistory();
+  if (name === 'history') { renderHistory(); renderHeatmap(); }
   if (name === 'wochen')  renderWeekly();
 }
 
@@ -1266,7 +1439,8 @@ function pick(btn) {
     .classList.toggle('answered', q in state.answers);
 }
 
-function onSlider(slider, key) {
+function onSlider(slider, key, forceVal) {
+  if (forceVal !== undefined) slider.value = forceVal;
   const val = parseInt(slider.value);
   const pct = (val - 1) / 9 * 100; // range 1–10
 
@@ -1304,10 +1478,10 @@ async function saveEntry() {
   await wait(600);
 
   try {
-    // Build entry
+    // Build entry (use editingDate when updating a past entry)
     const entry = {
       id:      Date.now(),
-      date:    todayISO(),
+      date:    state.editingDate || todayISO(),
       answers: { ...state.answers },
     };
 
@@ -1367,6 +1541,7 @@ function resetForm() {
 
   const notesEl = document.getElementById('notesField');
   if (notesEl) notesEl.value = '';
+  state.editingDate = null;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1401,6 +1576,10 @@ function entryCard(entry) {
   const a       = entry.answers || {};
   const dots    = buildDots(a);
   const badge   = buildBadge(a.goodday);
+  const sc      = entryScore(a);
+  const scoreEl = sc !== null
+    ? `<span style="font-size:.72rem;font-weight:700;color:var(--accent);background:var(--accent-bg);padding:2px 9px;border-radius:20px;flex-shrink:0">${sc.toFixed(1)}</span>`
+    : '';
 
   return `
     <div class="entry-card" onclick="showDetail(${entry.id})">
@@ -1413,6 +1592,7 @@ function entryCard(entry) {
         <div class="entry-weekday">${weekday}</div>
         <div class="entry-dots">${dots}</div>
       </div>
+      ${scoreEl}
       <div class="entry-badge ${badge.cls}">${badge.label}</div>
       <div class="entry-arrow">›</div>
     </div>`;
@@ -1550,11 +1730,23 @@ function renderWeekly() {
   const ac  = avgOf(latest.entries, 'clarity');
   const cnt = latest.entries.length;
 
+  // Best & worst day
+  let bestDay = null, worstDay = null, bestSc = -1, worstSc = 11;
+  for (const e of latest.entries) {
+    const sc = entryScore(e.answers || {});
+    if (sc === null) continue;
+    const name = new Date(e.date + 'T12:00:00').toLocaleDateString('de-DE', { weekday: 'long' });
+    if (sc > bestSc)  { bestSc  = sc;  bestDay  = name; }
+    if (sc < worstSc) { worstSc = sc;  worstDay = name; }
+  }
+
   let statsHTML = '';
-  if (ae !== null) statsHTML += `<div class="wrap-stat"><div class="wrap-stat-label">Energie</div><div class="wrap-stat-value">${ae} / 10</div></div>`;
-  if (af !== null) statsHTML += `<div class="wrap-stat"><div class="wrap-stat-label">Fokus</div><div class="wrap-stat-value">${af} / 10</div></div>`;
-  if (ac !== null) statsHTML += `<div class="wrap-stat"><div class="wrap-stat-label">Klarheit</div><div class="wrap-stat-value">${ac} / 10</div></div>`;
+  if (ae !== null) statsHTML += `<div class="wrap-stat"><div class="wrap-stat-label">Energie Ø</div><div class="wrap-stat-value">${ae}</div></div>`;
+  if (af !== null) statsHTML += `<div class="wrap-stat"><div class="wrap-stat-label">Fokus Ø</div><div class="wrap-stat-value">${af}</div></div>`;
+  if (ac !== null) statsHTML += `<div class="wrap-stat"><div class="wrap-stat-label">Klarheit Ø</div><div class="wrap-stat-value">${ac}</div></div>`;
   statsHTML += `<div class="wrap-stat"><div class="wrap-stat-label">Einträge</div><div class="wrap-stat-value">${cnt} Tag${cnt !== 1 ? 'e' : ''}</div></div>`;
+  if (bestDay)  statsHTML += `<div class="wrap-stat"><div class="wrap-stat-label">🏆 Bester Tag</div><div class="wrap-stat-value" style="font-size:.82rem">${bestDay}</div></div>`;
+  if (worstDay && worstDay !== bestDay) statsHTML += `<div class="wrap-stat"><div class="wrap-stat-label">💤 Schwächster</div><div class="wrap-stat-value" style="font-size:.82rem">${worstDay}</div></div>`;
 
   const wrapHTML = `
     <div class="wrap-card ${rating.cardCls}">
@@ -1595,13 +1787,65 @@ function renderWeekly() {
   }
   listHTML += '</div>';
 
-  el.innerHTML = headerHTML + wrapHTML + listHTML;
+  el.innerHTML = headerHTML + wrapHTML + renderTrendChart(entries) + listHTML;
 
   // Animate bar fill after paint
   requestAnimationFrame(() => requestAnimationFrame(() => {
     const fill = document.getElementById('wrapBarFill');
     if (fill) fill.style.width = pct + '%';
   }));
+}
+
+function renderTrendChart(entries) {
+  // Last 28 days
+  const today = new Date();
+  const days  = [];
+  for (let i = 27; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    days.push([d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-'));
+  }
+  const scoreMap = {};
+  entries.forEach(e => {
+    const sc = entryScore(e.answers || {});
+    if (sc !== null) scoreMap[e.date] = sc;
+  });
+  const points = days.map(iso => scoreMap[iso] ?? null);
+  if (!points.some(p => p !== null)) return '';
+
+  const W = 560, H = 80, pL = 22, pR = 8, pT = 8, pB = 8;
+  const w = W - pL - pR, h = H - pT - pB, n = points.length;
+
+  // Grid lines
+  let grid = '', pathD = '', dots = '';
+  [2, 5, 8].forEach(v => {
+    const y = (pT + (1 - v / 10) * h).toFixed(1);
+    grid += `<line x1="${pL}" y1="${y}" x2="${W-pR}" y2="${y}" stroke="var(--border)" stroke-width="1"/>`;
+    grid += `<text x="${pL-4}" y="${(+y+3).toFixed(1)}" font-size="8" fill="var(--text3)" text-anchor="end">${v}</text>`;
+  });
+
+  let lastIdx = -1;
+  points.forEach((p, i) => {
+    if (p === null) { lastIdx = -1; return; }
+    const x = (pL + (i / (n-1)) * w).toFixed(1);
+    const y = (pT + (1 - p / 10) * h).toFixed(1);
+    dots += `<circle cx="${x}" cy="${y}" r="2.8" fill="var(--accent)" opacity="0.75"/>`;
+    pathD += (lastIdx === i - 1 ? `L ` : `M `) + `${x} ${y} `;
+    lastIdx = i;
+  });
+
+  return `
+    <div class="trend-section">
+      <div class="trend-label">Tages-Score — letzte 28 Tage</div>
+      <div class="trend-card">
+        <svg class="trend-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          ${grid}
+          <path d="${pathD.trim()}" fill="none" stroke="var(--accent)" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+          ${dots}
+        </svg>
+      </div>
+    </div>`;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1683,6 +1927,9 @@ function showDetail(id) {
     html += '</div>';
   }
 
+  // Edit button
+  html += '<button class="detail-edit-btn" onclick="editEntry(' + id + ')">✏️ Eintrag bearbeiten</button>';
+
   document.getElementById('detailContent').innerHTML = html;
   showView('detail');
 }
@@ -1701,6 +1948,276 @@ function ansClass(value) {
   if (pos.includes(value)) return 'good';
   if (neg.includes(value)) return 'bad';
   return 'neutral';
+}
+
+/* ═══════════════════════════════════════════════════════
+   QUOTES
+═══════════════════════════════════════════════════════ */
+const QUOTES = [
+  { text: "Das Hindernis auf dem Weg ist der Weg.", author: "Marcus Aurelius" },
+  { text: "Du hast Macht über deinen Geist, nicht über äußere Ereignisse. Erkenne das, und du findest Stärke.", author: "Marcus Aurelius" },
+  { text: "Das größte Hindernis für das Leben ist die Erwartung, die auf morgen vertraut und den heutigen Tag verliert.", author: "Seneca" },
+  { text: "Es ist nicht die Last, die dich bricht, sondern die Art, wie du sie trägst.", author: "Epiktet" },
+  { text: "Man muss ein Chaos in sich tragen, um einen tanzenden Stern gebären zu können.", author: "Friedrich Nietzsche" },
+  { text: "Wer mit Ungeheuern kämpft, mag zusehen, dass er dabei nicht selbst zum Ungeheuer wird.", author: "Friedrich Nietzsche" },
+  { text: "Das Leben ist zu kurz, um es mit der Wut anderer zu verschwenden.", author: "Marcus Aurelius" },
+  { text: "Lerne zu verkaufen. Lerne zu bauen. Beides zusammen macht dich unaufhaltbar.", author: "Naval Ravikant" },
+  { text: "Reichtum wird geschaffen, indem man Dinge baut, die die Welt will — nicht indem man Zeit tauscht.", author: "Naval Ravikant" },
+  { text: "Zahle dir selbst zuerst — mit Zeit, Energie und Fokus.", author: "Naval Ravikant" },
+  { text: "Der erste Schritt besteht darin, festzustellen, dass etwas möglich ist.", author: "Elon Musk" },
+  { text: "Scheitern ist eine Option. Wenn du nicht scheiterst, bist du nicht innovativ genug.", author: "Elon Musk" },
+  { text: "Disziplin ist Freiheit.", author: "Jocko Willink" },
+  { text: "Extreme Ownership: Übernimm Verantwortung für alles in deinem Leben.", author: "Jocko Willink" },
+  { text: "Vergleiche dich nicht mit anderen. Vergleiche dich mit dem, der du gestern warst.", author: "Jordan B. Peterson" },
+  { text: "Gehe voran, richte dich auf, schaue geradeaus — als wärst du jemand, der die Welt tragen kann.", author: "Jordan B. Peterson" },
+  { text: "Das Leben bedeutet Leiden. Leid ist der Preis für Wachstum.", author: "Viktor Frankl" },
+  { text: "Wer ein Warum hat, dem ist kein Wie zu schwer.", author: "Viktor Frankl" },
+  { text: "Inmitten des Chaos liegt die Gelegenheit.", author: "Sun Tzu" },
+  { text: "Perfektion ist der Feind des Fortschritts.", author: "Winston Churchill" },
+  { text: "Die einzige Art, Großes zu tun, ist es zu lieben, was man tut.", author: "Steve Jobs" },
+  { text: "Wenn du es nicht einfach erklären kannst, verstehst du es nicht gut genug.", author: "Albert Einstein" },
+  { text: "Der Unternehmer lebt für einige Jahre seines Lebens so, wie die meisten nicht würden — und verdient dann den Rest seines Lebens so, wie die meisten nicht können.", author: "Unbekannt" },
+  { text: "Mach die Arbeit. Immer. Auch wenn du keine Lust hast.", author: "Unbekannt" },
+  { text: "Konzentriere dich auf Energie statt auf Zeit. Tu das Wichtigste zuerst.", author: "Unbekannt" },
+  { text: "Der Unterschied zwischen Amateur und Profi: Der Profi erscheint auch dann, wenn er nicht in Stimmung ist.", author: "Steven Pressfield" },
+  { text: "Niemand kommt, um dich zu retten. Du bist dein eigener Retter.", author: "Unbekannt" },
+  { text: "Baue dir morgens eine Stunde, die der Rest des Tages nicht zerstören kann.", author: "Unbekannt" },
+  { text: "Deine Gedanken werden zu Worten, deine Worte zu Handlungen, deine Handlungen zu deinem Charakter.", author: "Aristoteles" },
+  { text: "Der Mensch wird erst groß durch das, wogegen er kämpft.", author: "Unbekannt" },
+  { text: "Tue heute, was andere nicht wollen — lebe morgen, wie andere nicht können.", author: "Unbekannt" },
+  { text: "Sprich die Wahrheit — oder zumindest: lüge nicht.", author: "Jordan B. Peterson" },
+  { text: "Wenn du weißt, wohin du gehst, dann störe dich nicht an dem, was andere sagen.", author: "Seneca" },
+  { text: "Verliere keine Zeit damit, dich zu beklagen. Nutze sie, um ein besserer Mensch zu werden.", author: "Marcus Aurelius" },
+  { text: "Die Zukunft gehört denjenigen, die die Schönheit ihrer Träume glauben.", author: "Eleanor Roosevelt" },
+  { text: "Routine ist der Feind des Zeitgeistes. Brach die Routine und erschaffe etwas.", author: "Unbekannt" },
+  { text: "Du bist das Produkt deiner täglichen Gewohnheiten — nicht deiner gelegentlichen Höchstleistungen.", author: "Unbekannt" },
+  { text: "Es ist nicht genug, beschäftigt zu sein. Die Frage ist: Womit bist du beschäftigt?", author: "Henry David Thoreau" },
+  { text: "Freiheit bedeutet Verantwortung. Deshalb fürchten die meisten sie.", author: "George Bernard Shaw" },
+  { text: "Im Mittelpunkt jedes großen Unternehmens steht ein Geheimnis, das die Welt noch nicht kennt.", author: "Peter Thiel" },
+  { text: "Arbeite hart an dem, was du kontrollieren kannst. Lass los, was du nicht kontrollieren kannst.", author: "Epiktet" },
+  { text: "Die meisten Menschen überschätzen, was sie in einem Jahr schaffen — und unterschätzen, was sie in zehn Jahren schaffen.", author: "Bill Gates" },
+  { text: "Wer aufhört besser zu werden, hat aufgehört, gut zu sein.", author: "Philip Rosenthal" },
+  { text: "Tue zuerst das Schwierige. Das Leichte erledigt sich von selbst.", author: "Unbekannt" },
+  { text: "Disziplin ist der Brücke zwischen Zielen und Erfolg.", author: "Jim Rohn" },
+];
+
+function getDayQuote() {
+  const start = new Date(new Date().getFullYear(), 0, 1);
+  const diff  = Math.floor((new Date() - start) / 86400000);
+  return QUOTES[diff % QUOTES.length];
+}
+
+function renderQuote() {
+  const q  = getDayQuote();
+  const el = document.getElementById('quoteCard');
+  if (!el) return;
+  el.innerHTML =
+    '<div class="quote-bar"></div>' +
+    '<div><div class="quote-text">' + escHtml(q.text) + '</div>' +
+    '<div class="quote-author">— ' + escHtml(q.author) + '</div></div>';
+}
+
+/* ═══════════════════════════════════════════════════════
+   STREAK
+═══════════════════════════════════════════════════════ */
+function getStreak() {
+  const entries = loadEntries();
+  if (!entries.length) return 0;
+  const dateSet = new Set(entries.map(e => e.date));
+  const today   = todayISO();
+  const d       = new Date();
+  if (!dateSet.has(today)) d.setDate(d.getDate() - 1); // allow yesterday still counting
+  let streak = 0;
+  while (true) {
+    const iso = [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
+    if (dateSet.has(iso)) { streak++; d.setDate(d.getDate() - 1); }
+    else break;
+  }
+  return streak;
+}
+
+function renderStreak() {
+  const el = document.getElementById('streakBadge');
+  if (!el) return;
+  const s = getStreak();
+  el.innerHTML = s >= 1 ? `<span class="streak-badge">🔥 ${s} Tag${s !== 1 ? 'e' : ''}</span>` : '';
+}
+
+/* ═══════════════════════════════════════════════════════
+   HEATMAP
+═══════════════════════════════════════════════════════ */
+function renderHeatmap() {
+  const el = document.getElementById('heatmapContainer');
+  if (!el) return;
+  const entries = loadEntries();
+  const scoreMap = {};
+  entries.forEach(e => {
+    const sc = entryScore(e.answers || {});
+    if (sc !== null) scoreMap[e.date] = sc;
+  });
+
+  // Build 7 weeks (49 cells) ending today, starting on a Monday
+  const today = new Date();
+  const dow   = (today.getDay() + 6) % 7; // Mon=0
+  // Start = Monday of 6 weeks ago
+  const start = new Date(today);
+  start.setDate(today.getDate() - dow - 42);
+
+  const cols = [];
+  for (let col = 0; col < 7; col++) {
+    const cells = [];
+    for (let row = 0; row < 7; row++) {
+      const d   = new Date(start);
+      d.setDate(start.getDate() + col * 7 + row);
+      if (d > today) { cells.push(null); continue; }
+      const iso = [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
+      const sc  = scoreMap[iso];
+      let cls   = 'hm-empty';
+      if (sc != null) {
+        if (sc >= 8)   cls = 'hm-great';
+        else if (sc >= 6.5) cls = 'hm-good';
+        else if (sc >= 4.5) cls = 'hm-mid';
+        else cls = 'hm-low';
+      }
+      const isToday = iso === todayISO();
+      cells.push(`<div class="hm-cell ${cls}${isToday ? ' hm-today' : ''}" title="${iso}${sc != null ? ' · '+sc.toFixed(1) : ''}"></div>`);
+    }
+    cols.push(`<div class="heatmap-col">${cells.map(c => c || '').join('')}</div>`);
+  }
+
+  el.innerHTML = `
+    <div class="heatmap-label">Aktivität — letzte 7 Wochen</div>
+    <div class="heatmap-card">
+      <div class="heatmap-grid">${cols.join('')}</div>
+      <div class="heatmap-legend">
+        <span>Weniger</span>
+        <div class="heatmap-legend-cells">
+          <div class="hm-cell hm-empty"  style="width:11px;height:11px"></div>
+          <div class="hm-cell hm-low"    style="width:11px;height:11px"></div>
+          <div class="hm-cell hm-mid"    style="width:11px;height:11px"></div>
+          <div class="hm-cell hm-good"   style="width:11px;height:11px"></div>
+          <div class="hm-cell hm-great"  style="width:11px;height:11px"></div>
+        </div>
+        <span>Mehr</span>
+      </div>
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   DARK MODE
+═══════════════════════════════════════════════════════ */
+function toggleDarkMode() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const next   = isDark ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  storage.setItem('orbit_theme', next);
+  document.getElementById('themeToggle').textContent = next === 'dark' ? '☀️' : '🌙';
+}
+
+function initTheme() {
+  const saved = storage.getItem('orbit_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+}
+
+/* ═══════════════════════════════════════════════════════
+   REMINDER / NOTIFICATIONS
+═══════════════════════════════════════════════════════ */
+let _reminderTimeout = null;
+
+function openReminderModal() {
+  const stored = storage.getItem('orbit_reminder');
+  if (stored) document.getElementById('reminderTime').value = stored;
+  document.getElementById('reminderModal').classList.add('open');
+}
+function closeReminderModal() {
+  document.getElementById('reminderModal').classList.remove('open');
+}
+async function saveReminder() {
+  const time = document.getElementById('reminderTime').value;
+  if (!time) return;
+  if (typeof Notification === 'undefined') {
+    alert('Benachrichtigungen werden in diesem Browser nicht unterstützt.');
+    return;
+  }
+  if (Notification.permission === 'default') {
+    const perm = await Notification.requestPermission();
+    if (perm !== 'granted') {
+      alert('Bitte erlaube Benachrichtigungen in den Browser-Einstellungen.');
+      return;
+    }
+  }
+  if (Notification.permission === 'denied') {
+    alert('Benachrichtigungen sind blockiert. Bitte in den Browser-Einstellungen aktivieren.');
+    return;
+  }
+  storage.setItem('orbit_reminder', time);
+  scheduleReminder(time);
+  document.getElementById('reminderBtn').classList.add('active');
+  closeReminderModal();
+}
+function disableReminder() {
+  storage.removeItem('orbit_reminder');
+  if (_reminderTimeout) clearTimeout(_reminderTimeout);
+  document.getElementById('reminderBtn').classList.remove('active');
+  closeReminderModal();
+}
+function scheduleReminder(time) {
+  if (_reminderTimeout) clearTimeout(_reminderTimeout);
+  const [h, m] = time.split(':').map(Number);
+  const now    = new Date();
+  const target = new Date();
+  target.setHours(h, m, 0, 0);
+  if (target <= now) target.setDate(target.getDate() + 1);
+  _reminderTimeout = setTimeout(() => {
+    if (Notification.permission === 'granted') {
+      new Notification('Orbit 🪐', { body: 'Zeit für deinen täglichen Check-in.', icon: 'icon.svg' });
+    }
+    scheduleReminder(time); // reschedule for tomorrow
+  }, target - now);
+}
+function initReminder() {
+  const time = storage.getItem('orbit_reminder');
+  if (!time) return;
+  if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+    scheduleReminder(time);
+    const btn = document.getElementById('reminderBtn');
+    if (btn) btn.classList.add('active');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   EDIT ENTRY
+═══════════════════════════════════════════════════════ */
+function editEntry(id) {
+  const entry = loadEntries().find(e => e.id === id);
+  if (!entry) return;
+  resetForm();
+  const a = entry.answers || {};
+  // Restore choice buttons
+  for (const [key, val] of Object.entries(a)) {
+    if (key === 'notes') continue;
+    if (typeof val === 'number') {
+      const s = document.getElementById('s-' + key);
+      if (s) onSlider(s, key, val);
+    } else {
+      const btn = document.querySelector(`.choice-btn[data-q="${key}"][data-v="${CSS.escape(val)}"]`) ||
+                  [...document.querySelectorAll(`.choice-btn[data-q="${key}"]`)].find(b => b.dataset.v === val);
+      if (btn) pick(btn);
+    }
+  }
+  if (a.notes) {
+    const notesEl = document.getElementById('notesField');
+    if (notesEl) notesEl.value = a.notes;
+  }
+  state.editingDate = entry.date;
+  showView('checkin');
+  // Update header to show editing mode
+  document.getElementById('saveBtn').textContent = 'Eintrag aktualisieren';
+  const d = new Date(entry.date + 'T12:00:00');
+  document.getElementById('checkinDateText').textContent =
+    d.toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1898,7 +2415,7 @@ function initCanvas() {
 window.addEventListener('DOMContentLoaded', () => {
   // Set date label
   const d = new Date();
-  document.getElementById('checkinDate').textContent =
+  document.getElementById('checkinDateText').textContent =
     d.toLocaleDateString('de-DE', {
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
@@ -1910,6 +2427,10 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   checkTodayEntry();
+  renderStreak();
+  renderQuote();
+  initTheme();
+  initReminder();
   initCanvas();
   generateAppleIcon();
 });
