@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de" data-theme="light">
+<html lang="de">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -1082,10 +1082,6 @@
       </div>
       <span class="logo-text">Orbit</span>
     </div>
-    <div class="header-actions">
-      <button class="icon-btn" id="reminderBtn" onclick="openReminderModal()" title="Erinnerung">🔔</button>
-      <button class="icon-btn" id="themeToggle"  onclick="toggleDarkMode()"   title="Dark Mode">🌙</button>
-    </div>
     <nav class="nav">
       <button class="nav-btn active" onclick="showView('checkin')">Check-in</button>
       <button class="nav-btn"        onclick="showView('history')">Verlauf</button>
@@ -1097,9 +1093,6 @@
 
     <!-- ── VIEW: CHECK-IN ─────────────────────────────── -->
     <div class="view active" id="view-checkin">
-
-      <!-- Quote of the day -->
-      <div class="quote-card" id="quoteCard"></div>
 
       <div class="checkin-header">
         <div id="todayBadge"></div>
@@ -1252,6 +1245,9 @@
         <textarea class="notes-textarea" id="notesField" placeholder="Was noch erwähnenswert ist..." maxlength="600"></textarea>
       </div>
 
+      <!-- Quote of the day -->
+      <div class="quote-card" id="quoteCard" style="margin-top:20px;margin-bottom:0"></div>
+
       <div class="save-wrap">
         <button class="save-btn" id="saveBtn" onclick="saveEntry()">Eintrag speichern</button>
         <div class="save-hint" id="saveHint">Du kannst den Eintrag jederzeit erneut ansehen</div>
@@ -1284,18 +1280,6 @@
     <div class="view" id="view-wochen"></div>
 
   </main>
-</div>
-
-<!-- Reminder modal -->
-<div class="modal-overlay" id="reminderModal" onclick="if(event.target===this)closeReminderModal()">
-  <div class="modal-sheet">
-    <button class="modal-close" onclick="closeReminderModal()">✕</button>
-    <div class="modal-title">🔔 Tägliche Erinnerung</div>
-    <div class="modal-sub">Orbit erinnert dich täglich an deinen Check-in.</div>
-    <input type="time" class="time-input" id="reminderTime" value="20:00" />
-    <button class="modal-save-btn" onclick="saveReminder()">Erinnerung aktivieren</button>
-    <button class="reminder-off-btn" onclick="disableReminder()">Erinnerung deaktivieren</button>
-  </div>
 </div>
 
 <!-- Success overlay -->
@@ -2103,89 +2087,6 @@ function renderHeatmap() {
     </div>`;
 }
 
-/* ═══════════════════════════════════════════════════════
-   DARK MODE
-═══════════════════════════════════════════════════════ */
-function toggleDarkMode() {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  const next   = isDark ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  storage.setItem('orbit_theme', next);
-  document.getElementById('themeToggle').textContent = next === 'dark' ? '☀️' : '🌙';
-}
-
-function initTheme() {
-  const saved = storage.getItem('orbit_theme') || 'light';
-  document.documentElement.setAttribute('data-theme', saved);
-  const btn = document.getElementById('themeToggle');
-  if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
-}
-
-/* ═══════════════════════════════════════════════════════
-   REMINDER / NOTIFICATIONS
-═══════════════════════════════════════════════════════ */
-let _reminderTimeout = null;
-
-function openReminderModal() {
-  const stored = storage.getItem('orbit_reminder');
-  if (stored) document.getElementById('reminderTime').value = stored;
-  document.getElementById('reminderModal').classList.add('open');
-}
-function closeReminderModal() {
-  document.getElementById('reminderModal').classList.remove('open');
-}
-async function saveReminder() {
-  const time = document.getElementById('reminderTime').value;
-  if (!time) return;
-  if (typeof Notification === 'undefined') {
-    alert('Benachrichtigungen werden in diesem Browser nicht unterstützt.');
-    return;
-  }
-  if (Notification.permission === 'default') {
-    const perm = await Notification.requestPermission();
-    if (perm !== 'granted') {
-      alert('Bitte erlaube Benachrichtigungen in den Browser-Einstellungen.');
-      return;
-    }
-  }
-  if (Notification.permission === 'denied') {
-    alert('Benachrichtigungen sind blockiert. Bitte in den Browser-Einstellungen aktivieren.');
-    return;
-  }
-  storage.setItem('orbit_reminder', time);
-  scheduleReminder(time);
-  document.getElementById('reminderBtn').classList.add('active');
-  closeReminderModal();
-}
-function disableReminder() {
-  storage.removeItem('orbit_reminder');
-  if (_reminderTimeout) clearTimeout(_reminderTimeout);
-  document.getElementById('reminderBtn').classList.remove('active');
-  closeReminderModal();
-}
-function scheduleReminder(time) {
-  if (_reminderTimeout) clearTimeout(_reminderTimeout);
-  const [h, m] = time.split(':').map(Number);
-  const now    = new Date();
-  const target = new Date();
-  target.setHours(h, m, 0, 0);
-  if (target <= now) target.setDate(target.getDate() + 1);
-  _reminderTimeout = setTimeout(() => {
-    if (Notification.permission === 'granted') {
-      new Notification('Orbit 🪐', { body: 'Zeit für deinen täglichen Check-in.', icon: 'icon.svg' });
-    }
-    scheduleReminder(time); // reschedule for tomorrow
-  }, target - now);
-}
-function initReminder() {
-  const time = storage.getItem('orbit_reminder');
-  if (!time) return;
-  if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-    scheduleReminder(time);
-    const btn = document.getElementById('reminderBtn');
-    if (btn) btn.classList.add('active');
-  }
-}
 
 /* ═══════════════════════════════════════════════════════
    EDIT ENTRY
@@ -2429,8 +2330,6 @@ window.addEventListener('DOMContentLoaded', () => {
   checkTodayEntry();
   renderStreak();
   renderQuote();
-  initTheme();
-  initReminder();
   initCanvas();
   generateAppleIcon();
 });
