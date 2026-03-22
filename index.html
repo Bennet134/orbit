@@ -776,6 +776,146 @@
       .header { padding: 0 16px; }
       .choice-btn { font-size: 0.7rem; padding: 8px 5px; }
     }
+
+    /* ─── NOTES ──────────────────────────────────────────── */
+    .notes-section { margin-top: 20px; }
+    .notes-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 8px;
+      padding-left: 4px;
+    }
+    .notes-textarea {
+      width: 100%;
+      min-height: 88px;
+      padding: 14px 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 0.85rem;
+      color: var(--text);
+      resize: vertical;
+      outline: none;
+      box-shadow: var(--shadow);
+      line-height: 1.55;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .notes-textarea:focus {
+      border-color: var(--accent2);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .notes-textarea::placeholder { color: var(--text3); }
+
+    /* ─── WEEKLY VIEW ─────────────────────────────────────── */
+    .weekly-header { margin-bottom: 22px; }
+    .weekly-title { font-size: 1.45rem; font-weight: 700; letter-spacing: -0.025em; margin-bottom: 3px; }
+    .weekly-sub   { font-size: 0.8rem; color: var(--text3); }
+
+    .wrap-card {
+      border-radius: var(--radius);
+      padding: 26px 22px;
+      margin-bottom: 24px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 36px rgba(108,95,230,0.28), 0 2px 12px rgba(0,0,0,0.1);
+      animation: wrapIn 0.55s var(--ease-spring) both;
+    }
+    @keyframes wrapIn {
+      from { opacity: 0; transform: scale(0.93) translateY(12px); }
+      to   { opacity: 1; transform: scale(1)    translateY(0); }
+    }
+    .wrap-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 65% 55% at 80% 15%, rgba(255,255,255,0.16) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .wrap-card.excellent { background: linear-gradient(135deg, #41AC7B 0%, #2E8C5F 55%, #1A6A45 100%); }
+    .wrap-card.good      { background: linear-gradient(135deg, #6C5FE6 0%, #7C6FCD 50%, #9B7FEF 100%); }
+    .wrap-card.solid     { background: linear-gradient(135deg, #C8A84B 0%, #B8923A 55%, #A07830 100%); }
+    .wrap-card.hard      { background: linear-gradient(135deg, #D96A6A 0%, #C45555 55%, #A83E3E 100%); }
+    .wrap-card.empty     { background: linear-gradient(135deg, #8A8280 0%, #6A6258 100%); }
+
+    .wrap-week-label {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; opacity: 0.8; margin-bottom: 14px;
+    }
+    .wrap-score-row { display: flex; align-items: baseline; gap: 6px; margin-bottom: 8px; }
+    .wrap-score { font-size: 3.6rem; font-weight: 800; line-height: 1; letter-spacing: -0.04em; }
+    .wrap-score-max { font-size: 1.1rem; font-weight: 500; opacity: 0.7; }
+
+    .wrap-bar {
+      height: 7px; background: rgba(255,255,255,0.28);
+      border-radius: 4px; margin-bottom: 16px; overflow: hidden;
+    }
+    .wrap-bar-fill {
+      height: 100%; background: #fff; border-radius: 4px;
+      transition: width 1.1s cubic-bezier(0.4,0,0.2,1);
+    }
+    .wrap-rating-row { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+    .wrap-rating-emoji { font-size: 1.4rem; }
+    .wrap-rating-label { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; }
+    .wrap-divider { height: 1px; background: rgba(255,255,255,0.22); margin-bottom: 16px; }
+    .wrap-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .wrap-stat {
+      background: rgba(255,255,255,0.16); border-radius: 10px; padding: 10px 12px;
+      backdrop-filter: blur(4px);
+    }
+    .wrap-stat-label {
+      font-size: 0.64rem; font-weight: 600; opacity: 0.75;
+      text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px;
+    }
+    .wrap-stat-value { font-size: 1rem; font-weight: 700; }
+
+    .wrap-empty {
+      text-align: center; padding: 44px 20px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); margin-bottom: 24px;
+      color: var(--text3); box-shadow: var(--shadow); font-size: 0.85rem;
+    }
+
+    /* ─── WEEK LIST ───────────────────────────────────────── */
+    .week-section-label {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.09em;
+      text-transform: uppercase; color: var(--text3); margin-bottom: 10px; padding-left: 4px;
+    }
+    .week-list { display: flex; flex-direction: column; gap: 8px; }
+    .week-row {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 13px 16px;
+      box-shadow: var(--shadow); display: flex; align-items: center;
+      gap: 11px; animation: cardIn 0.4s var(--ease-out) both;
+    }
+    .week-row.current-week {
+      border-color: rgba(108,95,230,0.28);
+      background: linear-gradient(100deg, var(--accent-bg) 0%, transparent 70%);
+    }
+    .week-row-kw { font-size: 0.8rem; font-weight: 700; color: var(--text); min-width: 44px; flex-shrink: 0; }
+    .week-row-year { font-size: 0.64rem; color: var(--text3); }
+    .week-row-bar-wrap { flex: 1; height: 5px; background: var(--bg2); border-radius: 3px; overflow: hidden; }
+    .week-row-bar { height: 100%; border-radius: 3px; transition: width 0.9s var(--ease-out); }
+    .week-row-bar.excellent { background: var(--green); }
+    .week-row-bar.good      { background: var(--accent); }
+    .week-row-bar.solid     { background: var(--gold); }
+    .week-row-bar.hard      { background: var(--red); }
+    .week-row-score { font-size: 0.88rem; font-weight: 700; color: var(--text); min-width: 28px; text-align: right; flex-shrink: 0; }
+    .week-row-days  { font-size: 0.64rem; color: var(--text3); flex-shrink: 0; }
+
+    /* ─── DETAIL NOTES ────────────────────────────────────── */
+    .detail-notes-text {
+      padding: 14px 18px;
+      font-size: 0.82rem;
+      color: var(--text2);
+      line-height: 1.65;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
   </style>
 </head>
 <body>
@@ -795,6 +935,7 @@
     <nav class="nav">
       <button class="nav-btn active" onclick="showView('checkin')">Check-in</button>
       <button class="nav-btn"        onclick="showView('history')">Verlauf</button>
+      <button class="nav-btn"        onclick="showView('wochen')">Wochen</button>
     </nav>
   </header>
 
@@ -823,6 +964,14 @@
               <button class="choice-btn" data-q="mood" data-v="Schlecht"  onclick="pick(this)">Schlecht</button>
               <button class="choice-btn" data-q="mood" data-v="Neutral"   onclick="pick(this)">Neutral</button>
               <button class="choice-btn" data-q="mood" data-v="Gut"       onclick="pick(this)">Gut</button>
+            </div>
+          </div>
+          <div class="question" id="q-state">
+            <div class="q-label"><span class="q-answered-dot"></span>Was ist dein State?</div>
+            <div class="choices">
+              <button class="choice-btn" data-q="state" data-v="Niedergeschlagen" onclick="pick(this)">Niedergeschlagen</button>
+              <button class="choice-btn" data-q="state" data-v="Neutral"          onclick="pick(this)">Neutral</button>
+              <button class="choice-btn" data-q="state" data-v="Energiegeladen"   onclick="pick(this)">Energiegeladen</button>
             </div>
           </div>
           <div class="question" id="q-clarity">
@@ -939,6 +1088,11 @@
         </div>
       </div>
 
+      <div class="notes-section">
+        <div class="notes-label">Notiz <span style="opacity:.5;font-weight:400;letter-spacing:0;text-transform:none">(optional)</span></div>
+        <textarea class="notes-textarea" id="notesField" placeholder="Was noch erwähnenswert ist..." maxlength="600"></textarea>
+      </div>
+
       <div class="save-wrap">
         <button class="save-btn" id="saveBtn" onclick="saveEntry()">Eintrag speichern</button>
         <div class="save-hint" id="saveHint">Du kannst den Eintrag jederzeit erneut ansehen</div>
@@ -952,9 +1106,9 @@
         <div class="history-subtitle" id="historySub">Alle bisherigen Einträge</div>
       </div>
       <div class="history-actions">
-        <button class="action-btn" onclick="exportTxt()">↓ Exportieren</button>
-        <button class="action-btn" onclick="exportJson()">⬡ Backup (.json)</button>
-        <button class="action-btn" onclick="document.getElementById('importFile').click()">↑ Importieren</button>
+        <button class="action-btn" onclick="exportTxt()">↑ Exportieren</button>
+        <button class="action-btn" onclick="exportJson()">↑ Backup (.json)</button>
+        <button class="action-btn" onclick="document.getElementById('importFile').click()">↓ Importieren</button>
         <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJson(event)">
       </div>
       <div id="historyList"></div>
@@ -965,6 +1119,9 @@
       <button class="detail-back" onclick="showView('history')">← Zurück</button>
       <div id="detailContent"></div>
     </div>
+
+    <!-- ── VIEW: WOCHEN ───────────────────────────────── -->
+    <div class="view" id="view-wochen"></div>
 
   </main>
 </div>
@@ -993,18 +1150,40 @@ const state = {
 // Stable key — never change this, data lives here forever
 const KEY = 'orbit_entries';
 
-// Storage abstraction: localStorage → sessionStorage → in-memory fallback.
-// Ensures the app works in all contexts (local file, sandboxed iframe, private mode).
+// Storage abstraction: write to ALL available backends, read from the first that has data.
+// This maximises persistence across environments (GitHub Pages, local file, sandboxed iframes).
 const storage = (() => {
-  const probe = s => { s.setItem('__o', '1'); s.removeItem('__o'); return s; };
-  try { return probe(localStorage); }   catch {}
-  try { return probe(sessionStorage); } catch {}
-  // Pure in-memory fallback — survives the session but not a page reload
+  // Round-trip probe — only trusts storage that actually retains data
+  const probe = s => {
+    const k = '__orbit_probe__';
+    s.setItem(k, k);
+    if (s.getItem(k) !== k) throw 0;
+    s.removeItem(k);
+    return s;
+  };
+
+  const stores = [];
+  try { stores.push(probe(localStorage)); }   catch {}
+  try { stores.push(probe(sessionStorage)); } catch {}
+
+  // In-memory fallback — survives the session even in fully sandboxed iframes
   const mem = Object.create(null);
-  return {
+  stores.push({
     getItem:    k => (k in mem ? mem[k] : null),
     setItem:    (k, v) => { mem[k] = String(v); },
     removeItem: k => { delete mem[k]; },
+  });
+
+  return {
+    getItem: k => {
+      for (const s of stores) {
+        const v = s.getItem(k);
+        if (v !== null) return v;
+      }
+      return null;
+    },
+    setItem:    (k, v) => stores.forEach(s => { try { s.setItem(k, v); } catch {} }),
+    removeItem: k      => stores.forEach(s => { try { s.removeItem(k); } catch {} }),
   };
 })();
 
@@ -1057,8 +1236,10 @@ function showView(name) {
   navBtns.forEach(b => b.classList.remove('active'));
   if (name === 'checkin') navBtns[0].classList.add('active');
   if (name === 'history' || name === 'detail') navBtns[1].classList.add('active');
+  if (name === 'wochen')  navBtns[2].classList.add('active');
 
   if (name === 'history') renderHistory();
+  if (name === 'wochen')  renderWeekly();
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1130,6 +1311,13 @@ async function saveEntry() {
       answers: { ...state.answers },
     };
 
+    // Capture notes field
+    const notesEl = document.getElementById('notesField');
+    if (notesEl) {
+      const note = notesEl.value.trim();
+      if (note) entry.answers.notes = note;
+    }
+
     // Persist (replace today's entry if exists)
     const all = loadEntries().filter(e => e.date !== entry.date);
     all.unshift(entry);
@@ -1176,6 +1364,9 @@ function resetForm() {
     const tip = document.getElementById('tip-' + key);
     if (tip) tip.classList.remove('visible');
   });
+
+  const notesEl = document.getElementById('notesField');
+  if (notesEl) notesEl.value = '';
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1228,7 +1419,7 @@ function entryCard(entry) {
 }
 
 function buildDots(a) {
-  const keys = ['mood','clarity','energy','future','goal','focus','satisfied','discipline','progress','goodday'];
+  const keys = ['mood','state','clarity','energy','future','goal','focus','satisfied','discipline','progress','goodday'];
   return keys.map(k => {
     const v = a[k];
     if (v == null) return `<div class="dot dot-gray"></div>`;
@@ -1242,8 +1433,8 @@ function dotClass(key, value) {
     if (value >= 4) return 'dot-accent';
     return 'dot-amber';
   }
-  const pos = ['Gut','Ja','Ziel','Diszipliniert'];
-  const neg = ['Schlecht','Nein','Flucht','Lost'];
+  const pos = ['Gut','Ja','Ziel','Diszipliniert','Energiegeladen'];
+  const neg = ['Schlecht','Nein','Flucht','Lost','Niedergeschlagen'];
   if (pos.includes(value)) return 'dot-green';
   if (neg.includes(value)) return 'dot-red';
   return 'dot-amber';
@@ -1254,6 +1445,163 @@ function buildBadge(goodday) {
   if (goodday === 'Ja')      return { cls: 'badge-good',    label: 'Guter Tag' };
   if (goodday === 'Nein')    return { cls: 'badge-bad',     label: 'Schwer' };
   return                            { cls: 'badge-neutral', label: 'Okay' };
+}
+
+/* ═══════════════════════════════════════════════════════
+   WEEKLY
+═══════════════════════════════════════════════════════ */
+const POS_VALUES = ['Gut','Ja','Ziel','Diszipliniert','Energiegeladen'];
+const NEG_VALUES = ['Schlecht','Nein','Flucht','Lost','Niedergeschlagen'];
+
+function getISOWeek(dateStr) {
+  const d   = new Date(dateStr + 'T12:00:00');
+  const dow = (d.getDay() + 6) % 7; // Mon=0
+  const thu = new Date(d);
+  thu.setDate(d.getDate() - dow + 3);
+  const firstThu = new Date(thu.getFullYear(), 0, 4);
+  const week = 1 + Math.round((thu - firstThu) / (7 * 24 * 3600 * 1000));
+  return { year: thu.getFullYear(), week };
+}
+
+function getWeekRange(year, week) {
+  const jan4  = new Date(year, 0, 4);
+  const dow   = (jan4.getDay() + 6) % 7;
+  const mon   = new Date(jan4);
+  mon.setDate(jan4.getDate() - dow + (week - 1) * 7);
+  const sun   = new Date(mon);
+  sun.setDate(mon.getDate() + 6);
+  const fmt = d => d.toLocaleDateString('de-DE', { day: 'numeric', month: 'short' });
+  return fmt(mon) + ' – ' + fmt(sun);
+}
+
+function groupByWeek(entries) {
+  const weeks = new Map();
+  for (const entry of entries) {
+    const { year, week } = getISOWeek(entry.date);
+    const key = `${year}-W${String(week).padStart(2,'0')}`;
+    if (!weeks.has(key)) weeks.set(key, { year, week, key, entries: [] });
+    weeks.get(key).entries.push(entry);
+  }
+  return Array.from(weeks.values()).sort((a, b) => b.key.localeCompare(a.key));
+}
+
+function entryScore(a) {
+  const scores = [];
+  for (const k of ['mood','state','future','goal','satisfied','discipline','progress','goodday']) {
+    const v = a[k];
+    if (v == null) continue;
+    if (POS_VALUES.includes(v))  scores.push(10);
+    else if (NEG_VALUES.includes(v)) scores.push(0);
+    else scores.push(5);
+  }
+  for (const k of ['clarity','energy','focus']) {
+    if (a[k] != null) scores.push(a[k]);
+  }
+  return scores.length ? scores.reduce((s, v) => s + v, 0) / scores.length : null;
+}
+
+function weekScore(weekEntries) {
+  const scores = weekEntries.map(e => entryScore(e.answers || {})).filter(s => s !== null);
+  return scores.length ? scores.reduce((s, v) => s + v, 0) / scores.length : null;
+}
+
+function weekRating(score) {
+  if (score === null)  return { label: '—',          cls: 'badge-empty',   barCls: 'good',      emoji: '—',  cardCls: 'empty'     };
+  if (score >= 8)      return { label: 'Exzellent',  cls: 'badge-good',    barCls: 'excellent', emoji: '🚀', cardCls: 'excellent' };
+  if (score >= 6.5)    return { label: 'Gut',        cls: 'badge-good',    barCls: 'good',      emoji: '✨', cardCls: 'good'      };
+  if (score >= 4.5)    return { label: 'Solide',     cls: 'badge-neutral', barCls: 'solid',     emoji: '⚡', cardCls: 'solid'     };
+  return                      { label: 'Schwierig',  cls: 'badge-bad',     barCls: 'hard',      emoji: '🌧', cardCls: 'hard'      };
+}
+
+function avgOf(weekEntries, key) {
+  const vals = weekEntries.map(e => (e.answers || {})[key]).filter(v => v != null && typeof v === 'number');
+  return vals.length ? (vals.reduce((s, v) => s + v, 0) / vals.length).toFixed(1) : null;
+}
+
+function renderWeekly() {
+  const entries = loadEntries();
+  const weeks   = groupByWeek(entries);
+  const el      = document.getElementById('view-wochen');
+
+  const headerHTML = `
+    <div class="weekly-header">
+      <div class="weekly-title">Wochenrückblick</div>
+      <div class="weekly-sub">Deine Wochen im Überblick</div>
+    </div>`;
+
+  if (weeks.length === 0) {
+    el.innerHTML = headerHTML + `
+      <div class="wrap-empty">
+        <div style="font-size:2rem;margin-bottom:10px;opacity:.4">🌌</div>
+        Noch keine Einträge. Starte deinen ersten Check-in.
+      </div>`;
+    return;
+  }
+
+  // ── Latest week wrap card ────────────────────────────
+  const latest  = weeks[0];
+  const lScore  = weekScore(latest.entries);
+  const rating  = weekRating(lScore);
+  const pct     = lScore !== null ? Math.round(lScore * 10) : 0;
+  const range   = getWeekRange(latest.year, latest.week);
+
+  const ae  = avgOf(latest.entries, 'energy');
+  const af  = avgOf(latest.entries, 'focus');
+  const ac  = avgOf(latest.entries, 'clarity');
+  const cnt = latest.entries.length;
+
+  let statsHTML = '';
+  if (ae !== null) statsHTML += `<div class="wrap-stat"><div class="wrap-stat-label">Energie</div><div class="wrap-stat-value">${ae} / 10</div></div>`;
+  if (af !== null) statsHTML += `<div class="wrap-stat"><div class="wrap-stat-label">Fokus</div><div class="wrap-stat-value">${af} / 10</div></div>`;
+  if (ac !== null) statsHTML += `<div class="wrap-stat"><div class="wrap-stat-label">Klarheit</div><div class="wrap-stat-value">${ac} / 10</div></div>`;
+  statsHTML += `<div class="wrap-stat"><div class="wrap-stat-label">Einträge</div><div class="wrap-stat-value">${cnt} Tag${cnt !== 1 ? 'e' : ''}</div></div>`;
+
+  const wrapHTML = `
+    <div class="wrap-card ${rating.cardCls}">
+      <div class="wrap-week-label">KW ${latest.week} · ${latest.year}&nbsp;&nbsp;·&nbsp;&nbsp;${range}</div>
+      <div class="wrap-score-row">
+        <div class="wrap-score">${lScore !== null ? lScore.toFixed(1) : '—'}</div>
+        <div class="wrap-score-max">/ 10</div>
+      </div>
+      <div class="wrap-bar"><div class="wrap-bar-fill" id="wrapBarFill" style="width:0%"></div></div>
+      <div class="wrap-rating-row">
+        <span class="wrap-rating-emoji">${rating.emoji}</span>
+        <span class="wrap-rating-label">${rating.label}</span>
+      </div>
+      <div class="wrap-divider"></div>
+      <div class="wrap-stats">${statsHTML}</div>
+    </div>`;
+
+  // ── Week comparison list ─────────────────────────────
+  let listHTML = '<div class="week-section-label">Alle Wochen im Vergleich</div><div class="week-list">';
+  for (const w of weeks) {
+    const sc = weekScore(w.entries);
+    const rt = weekRating(sc);
+    const wp = sc !== null ? Math.round(sc * 10) : 0;
+    const isCurrent = w.key === latest.key;
+    listHTML += `
+      <div class="week-row${isCurrent ? ' current-week' : ''}">
+        <div>
+          <div class="week-row-kw">KW ${w.week}${isCurrent ? ' ✦' : ''}</div>
+          <div class="week-row-year">${w.year}</div>
+        </div>
+        <div class="week-row-bar-wrap">
+          <div class="week-row-bar ${rt.barCls}" style="width:${wp}%"></div>
+        </div>
+        <div class="week-row-score">${sc !== null ? sc.toFixed(1) : '—'}</div>
+        <div class="entry-badge ${rt.cls}">${rt.label}</div>
+        <div class="week-row-days">${w.entries.length}T</div>
+      </div>`;
+  }
+  listHTML += '</div>';
+
+  el.innerHTML = headerHTML + wrapHTML + listHTML;
+
+  // Animate bar fill after paint
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const fill = document.getElementById('wrapBarFill');
+    if (fill) fill.style.width = pct + '%';
+  }));
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1274,6 +1622,7 @@ function showDetail(id) {
       label: '🧠 Zustand & Mindset',
       rows: [
         { q: 'Wie fühlst du dich gerade?',         v: a.mood,       type: 'choice' },
+        { q: 'Was ist dein State?',                 v: a.state,      type: 'choice' },
         { q: 'Wie klar ist dein Kopf?',              v: a.clarity,    type: 'slider' },
         { q: 'Wie hoch ist dein Energielevel?',      v: a.energy,     type: 'slider' },
       ],
@@ -1326,13 +1675,29 @@ function showDetail(id) {
     html += '</div></div>';
   }
 
+  // Notes section
+  if (a.notes) {
+    html += '<div class="detail-section">';
+    html += '<div class="detail-section-label">📝 Notiz</div>';
+    html += '<div class="detail-card"><div class="detail-notes-text">' + escHtml(a.notes) + '</div></div>';
+    html += '</div>';
+  }
+
   document.getElementById('detailContent').innerHTML = html;
   showView('detail');
 }
 
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 function ansClass(value) {
-  const pos = ['Gut','Ja','Ziel','Diszipliniert'];
-  const neg = ['Schlecht','Nein','Flucht','Lost'];
+  const pos = ['Gut','Ja','Ziel','Diszipliniert','Energiegeladen'];
+  const neg = ['Schlecht','Nein','Flucht','Lost','Niedergeschlagen'];
   if (pos.includes(value)) return 'good';
   if (neg.includes(value)) return 'bad';
   return 'neutral';
@@ -1375,6 +1740,7 @@ function checkTodayEntry() {
 ═══════════════════════════════════════════════════════ */
 const FIELD_LABELS = {
   mood:        'Stimmung',
+  state:       'State',
   clarity:     'Kopfklarheit',
   energy:      'Energielevel',
   future:      'Zukunftsorientiert',
@@ -1415,6 +1781,11 @@ function exportTxt() {
         out += '  ' + label.padEnd(30) + display + '\n';
         hasAny = true;
       }
+    }
+    if (a.notes) {
+      out += '  Notiz:\n';
+      out += '    ' + a.notes.replace(/\n/g, '\n    ') + '\n';
+      hasAny = true;
     }
     if (!hasAny) out += '  (Keine Antworten gespeichert)\n';
     out += '\n';
